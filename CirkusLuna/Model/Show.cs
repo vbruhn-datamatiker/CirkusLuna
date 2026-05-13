@@ -7,8 +7,9 @@
         public string ShowName { get; set; } = string.Empty;
         public DateOnly Date { get; set; }
         public int TotalSeats { get; set; }
+        public List<Artist> Artists { get; set; } = new List<Artist>();
         
-        //By hvor forestillingen finder sted
+        //Store city object - By hvor forestillingen finder sted
         public City City { get; set; }
 
         //Constructor
