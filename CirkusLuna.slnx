@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="CirkusLuna.ClassLibrary/CirkusLuna.ClassLibrary.csproj" Id="49ff6835-43ba-4898-8f4f-d5f4594fd8a9" />
+  <Project Path="CirkusLuna.Console/CirkusLuna.Console.csproj" Id="5b2e2238-f8c3-4d6e-a5ff-9d9544ce0cde" />
   <Project Path="CirkusLuna/CirkusLuna.csproj" />
 </Solution>

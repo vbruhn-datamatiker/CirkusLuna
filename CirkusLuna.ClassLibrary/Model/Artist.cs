@@ -1,4 +1,5 @@
-﻿namespace CirkusLuna.Model
+﻿namespace CirkusLuna.ClassLibrary.Model
+
 {
     //Artist class, arver fra Person
     public class Artist : Person

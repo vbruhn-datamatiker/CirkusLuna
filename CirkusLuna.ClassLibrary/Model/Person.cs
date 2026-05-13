@@ -1,4 +1,4 @@
-﻿namespace CirkusLuna.Model
+﻿namespace CirkusLuna.ClassLibrary.Model
 {
     //Base class for alle personer
     //Abstract class, fordi Person ikke skal instantieres

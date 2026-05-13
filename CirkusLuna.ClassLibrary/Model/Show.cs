@@ -1,4 +1,4 @@
-﻿namespace CirkusLuna.Model
+﻿namespace CirkusLuna.ClassLibrary.Model
 {
     public class Show
     {

@@ -1,4 +1,4 @@
-﻿using CirkusLuna.Model;
+﻿using CirkusLuna.ClassLibrary.Model;
 
 namespace CirkusLuna.Repository
 {
@@ -6,6 +6,6 @@ namespace CirkusLuna.Repository
     {
         //Beskriver hvad man kan gøre med data
         List<Show> GetAll();
-        Show GetByID(int id);
+        Show GetById(int id);
     }
 }
