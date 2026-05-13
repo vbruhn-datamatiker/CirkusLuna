@@ -39,7 +39,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             Show show3 = (new Show(3, "Cirkus Luna Fyn", new DateOnly(2026, 7, 22), 130, odense));
             show3.Artists.Add(artist1);
             show3.Artists.Add(artist2);
-            show2.Artists.Add(artist4);
+            show3.Artists.Add(artist4);
             show3.Artists.Add(artist5);
 
             Show show4 = (new Show(4, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 3), 150, aalborg));
@@ -75,6 +75,23 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
             return null;
         }
+
+        //Search algoritmer til by og dato
+        public List<Show> GetByCity(string cityName)
+        {
+            //Liste til resultat af søgning
+            List<Show> result = new List<Show>();
+
+            foreach (Show show in _shows)
+            {
+                if (show.City.Name.ToLower() == cityName.ToLower())
+                {
+                    result.Add(show);
+                }
+            }
+            return result;
+        }
+
 
     }
 }
