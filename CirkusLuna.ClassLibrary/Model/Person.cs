@@ -10,6 +10,14 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
+        //Mulighed for at kombinere firstName og lastName
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
 
         //Constructor
         public Person(int id, string firstName, string lastName, string email)

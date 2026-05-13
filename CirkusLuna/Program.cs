@@ -1,6 +1,3 @@
-using CirkusLuna.Repository;
-using CirkusLuna.Model;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

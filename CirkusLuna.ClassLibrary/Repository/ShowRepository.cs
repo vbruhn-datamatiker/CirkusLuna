@@ -1,7 +1,7 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 
 
-namespace CirkusLuna.Repository
+namespace CirkusLuna.ClassLibrary.Repository
 {
     public class ShowRepository : IShowRepository
     {
@@ -11,17 +11,52 @@ namespace CirkusLuna.Repository
         //Constructor
         public ShowRepository()
         {
+            //Artister
+            Artist artist1 = new Artist(1, "Mona", "Lisa", "mlisa@cirkusluna.dk", "Akrobat");
+            Artist artist2 = new Artist(1, "Hr.", "Skæg", "skæg@cirkusluna.dk", "Klovn");
+            Artist artist3 = new Artist(1, "Johnny", "Ace", "ace@cirkusluna.dk", "Strongman");
+            Artist artist4 = new Artist(1, "Benny", "Bent", "bent@cirkusluna.dk", "Jonglør");
+            Artist artist5 = new Artist(1, "Mette", "Munk", "munk@cirkusluna.dk", "Linedanser");
+
+            //Byer
             City copenhagen = new City(1, "København");
             City roskilde = new City(2, "Roskilde");
             City odense = new City(3, "Odense");
             City aalborg = new City(4, "Aalborg");
             City aarhus = new City(5, "Århus");
 
-            _shows.Add(new Show(1, "Cirkus Luna Sjællands-Tourne", new DateOnly(2026, 7, 12), 150, copenhagen));
-            _shows.Add(new Show(2, "Cirkus Luna Sjællands-Tourne", new DateOnly(2026, 7, 14), 150, roskilde));
-            _shows.Add(new Show(3, "Cirkus Luna Fyn", new DateOnly(2026, 7, 22), 130, odense));
-            _shows.Add(new Show(4, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 3), 150, aalborg));
-            _shows.Add(new Show(5, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 6), 150, aarhus));
+            //Shows med artister
+            Show show1 = (new Show(1, "Cirkus Luna Sjællands-Tourne", new DateOnly(2026, 7, 12), 150, copenhagen));
+            show1.Artists.Add(artist1);
+            show1.Artists.Add(artist2);
+            show1.Artists.Add(artist3);
+
+            Show show2 = (new Show(2, "Cirkus Luna Sjællands-Tourne", new DateOnly(2026, 7, 14), 150, roskilde));
+            show2.Artists.Add(artist1);
+            show2.Artists.Add(artist2);
+            show2.Artists.Add(artist4);
+
+            Show show3 = (new Show(3, "Cirkus Luna Fyn", new DateOnly(2026, 7, 22), 130, odense));
+            show3.Artists.Add(artist1);
+            show3.Artists.Add(artist2);
+            show2.Artists.Add(artist4);
+            show3.Artists.Add(artist5);
+
+            Show show4 = (new Show(4, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 3), 150, aalborg));
+            show4.Artists.Add(artist2);
+            show4.Artists.Add(artist3);
+            show4.Artists.Add(artist4);
+            Show show5 = (new Show(5, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 6), 150, aarhus));
+            show4.Artists.Add(artist2);
+            show4.Artists.Add(artist3);
+            show4.Artists.Add(artist4);
+
+            //Add shows til lsite
+            _shows.Add(show1);
+            _shows.Add(show2);
+            _shows.Add(show3);
+            _shows.Add(show4);
+            _shows.Add(show5);
         }
 
         public List<Show> GetAll()

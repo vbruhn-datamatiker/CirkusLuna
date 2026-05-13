@@ -1,6 +1,6 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 
-namespace CirkusLuna.Repository
+namespace CirkusLuna.ClassLibrary.Repository
 {
     public interface IShowRepository
     {
