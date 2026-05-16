@@ -16,7 +16,7 @@ namespace CirkusLuna.ClassLibrary.Repository
 
             City copenhagen = new City(1, "København");
 
-            Show show1 = new Show(1, "Cirkus Luna", new DateOnly(2026, 7, 12), 150, copenhagen);
+            Show show1 = new Show(1, "Cirkus Luna", new DateOnly(2026, 7, 12), 150, 10, copenhagen);
 
             Customer customer1 = new Customer(1, "Gunner", "Gunnersen", "gun@mail.com", "56345678", false);
 

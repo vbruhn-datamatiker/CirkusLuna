@@ -23,8 +23,6 @@ namespace CirkusLuna.ClassLibrary.Repository
             _customerList.Add(customer4);
             _customerList.Add(customer5);
 
-
-
         }
         public List<Customer> GetAll()
         {
