@@ -1,5 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+using CirkusLuna.ClassLibrary.Repository;
 
+var builder = WebApplication.CreateBuilder(args);
+// Register repositories for dependency injection
+builder.Services.AddSingleton<IShowRepository, ShowRepository>();
+builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+builder.Services.AddSingleton<IReservationRepository, ReservationRepository>();
+builder.Services.AddSingleton<INewsPostRepository, NewsPostRepository>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 

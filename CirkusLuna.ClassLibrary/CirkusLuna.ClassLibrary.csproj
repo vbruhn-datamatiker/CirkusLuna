@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="Repository\" />
+    <EditorConfigFiles Remove="C:\Users\doubl\Documents\Gitprojects\CirkusLuna\CirkusLuna.ClassLibrary\Service\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\doubl\Documents\Gitprojects\CirkusLuna\CirkusLuna.ClassLibrary\Service\.editorconfig" />
   </ItemGroup>
 
 </Project>

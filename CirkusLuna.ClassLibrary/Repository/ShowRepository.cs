@@ -12,11 +12,12 @@ namespace CirkusLuna.ClassLibrary.Repository
         public ShowRepository()
         {
             //Artister
+            //Har ændret artist2 =new Artist(2... på dem her så de passer 
             Artist artist1 = new Artist(1, "Mona", "Lisa", "mlisa@cirkusluna.dk", "Akrobat");
-            Artist artist2 = new Artist(1, "Hr.", "Skæg", "skæg@cirkusluna.dk", "Klovn");
-            Artist artist3 = new Artist(1, "Johnny", "Ace", "ace@cirkusluna.dk", "Strongman");
-            Artist artist4 = new Artist(1, "Benny", "Bent", "bent@cirkusluna.dk", "Jonglør");
-            Artist artist5 = new Artist(1, "Mette", "Munk", "munk@cirkusluna.dk", "Linedanser");
+            Artist artist2 = new Artist(2, "Hr.", "Skæg", "skæg@cirkusluna.dk", "Klovn");
+            Artist artist3 = new Artist(3, "Johnny", "Ace", "ace@cirkusluna.dk", "Strongman");
+            Artist artist4 = new Artist(4, "Benny", "Bent", "bent@cirkusluna.dk", "Jonglør");
+            Artist artist5 = new Artist(5, "Mette", "Munk", "munk@cirkusluna.dk", "Linedanser");
 
             //Byer
             City copenhagen = new City(1, "København");
@@ -46,10 +47,11 @@ namespace CirkusLuna.ClassLibrary.Repository
             show4.Artists.Add(artist2);
             show4.Artists.Add(artist3);
             show4.Artists.Add(artist4);
+            //ændret shows5, så de passer 
             Show show5 = (new Show(5, "Cirkus Luna Jyllands-Tourne", new DateOnly(2026, 8, 6), 150, aarhus));
-            show4.Artists.Add(artist2);
-            show4.Artists.Add(artist3);
-            show4.Artists.Add(artist4);
+            show5.Artists.Add(artist2);
+            show5.Artists.Add(artist3);
+            show5.Artists.Add(artist4);
 
             //Add shows til lsite
             _shows.Add(show1);
@@ -91,7 +93,6 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
             return result;
         }
-
 
     }
 }
