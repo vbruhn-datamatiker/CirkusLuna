@@ -10,7 +10,7 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
-        //Mulighed for at kombinere firstName og lastName
+        //FullName metode firstName + lastName
         public string FullName
         {
             get

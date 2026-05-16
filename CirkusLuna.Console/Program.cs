@@ -6,10 +6,12 @@ using CirkusLuna.ClassLibrary.Repository;
 //Test til console app
 IShowRepository repository = new ShowRepository();
 
+//Indledning
 Console.WriteLine("Velkommen til Cirkus Luna");
-Console.WriteLine("Se alle forestillinger - Tast 1");
+Console.WriteLine("Se alle nærmeste forestillinger - Tast 1");
 Console.WriteLine("Søg efter den næste forestilling i en by - tast 2");
 
+//Søg efter forestillinger
 string choice = Console.ReadLine();
 
 if (choice == "1")
@@ -45,6 +47,7 @@ else if (choice == "2")
             {
                 Console.WriteLine($"{artist.Act}, {artist.FullName}");
             }
+            Console.WriteLine($"Der er {show.Seats} antal ledige pladser og {show.VipSeats} VIP pladser. Book nu mens der stadig er ledige biletter!");
         }
     }
 }
