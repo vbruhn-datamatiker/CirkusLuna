@@ -12,9 +12,16 @@ namespace CirkusLuna.ClassLibrary.Repository
         //Employee Constructor
         public EmployeeRepository()
         {
+            //Oprettelse af medarbejdere
             Employee employee1 = new Employee(1, "Benny", "Blæk", "blæk@cirkusluna.dk", "Direktør", "blæk");
             Employee employee2 = new Employee(2, "Dorte", "Hansen", "hansen@cirkusluna.dk", "Sekretær", "hansen");
             Employee employee3 = new Employee(3, "Manfred", "Manfredi", "manfredi@cirkusluna.dk", "Vært", "manfredi");
+
+            //Tilføjelse af medarbejdere til Employee List
+            _employeeList.Add(employee1);
+            _employeeList.Add(employee2);
+            _employeeList.Add(employee3);
+
         }
 
         public List<Employee> GetAll()

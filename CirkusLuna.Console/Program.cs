@@ -58,7 +58,32 @@ else if (choice == "2")
     }
 } else if (choice == "3")
     {
-        Console.WriteLine("Angiv venligst dit medarbejder ID:");
+    Console.WriteLine("Angiv venligst dit medarbejder password:");
+    string employeePassword = Console.ReadLine();
+
+    //Medarbejder loggedIn. Default med ingen fundet medarbejder - eksisterer efter loop
+    Employee loggedIn = null;
+    
+    //Gennemgår alle medarbejdere i listen
+    foreach (Employee employee in employeeRepository.GetAll())
+    {
+        //Tjekker efter match med password
+        if (employee.Password == employeePassword) 
+            { 
+                //Gemmer medarbejder i loggedIn
+                loggedIn = employee;
+                //Stop loop
+                break;
+            }
+    }
+
+    //Hvis loggedIn ikke er null (Medarbejder fundet)
+    if (loggedIn != null)
+        {
+            Console.WriteLine($"Velkommen {loggedIn.FirstName}.");
+        }
+
+
     }
 
 
