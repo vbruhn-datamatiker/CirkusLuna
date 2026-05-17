@@ -5,6 +5,7 @@ using CirkusLuna.ClassLibrary.Repository;
 
 //Test til console app
 IShowRepository repository = new ShowRepository();
+IEmployeeRepository employeeRepository = new EmployeeRepository();
 
 //Indledning
 Console.BackgroundColor = ConsoleColor.Blue;
@@ -80,10 +81,13 @@ else if (choice == "2")
     //Hvis loggedIn ikke er null (Medarbejder fundet)
     if (loggedIn != null)
         {
-            Console.WriteLine($"Velkommen {loggedIn.FirstName}.");
-        }
+            //Sender medarbejder til "Profil"
+            Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
+            Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
 
-
+            Console.WriteLine("Hvad vil du foretage dig nu?");
+        
+    }
     }
 
 
