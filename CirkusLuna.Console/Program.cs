@@ -1,5 +1,6 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 using CirkusLuna.ClassLibrary.Repository;
+using CirkusLuna.ClassLibrary.Service;
 
 //Console App Program
 
@@ -8,6 +9,8 @@ IShowRepository showRepository = new ShowRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 IReservationRepository reservationRepository = new ReservationRepository();
 ICustomerRepository customerRepository = new CustomerRepository();
+IShowService showService = new ShowService(showRepository);
+IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
 
 
 //Indledning
@@ -39,7 +42,7 @@ if (choice == "1")
     }
     Console.WriteLine("Bestil biletter nu! - Tast 1");
     string createReservation = Console.ReadLine();
-    
+
     if (createReservation == "1")
     {
         Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille biletter til!");
@@ -50,8 +53,8 @@ if (choice == "1")
         if (chosenShow == null)
         {
             Console.Write("Show ikke fundet, prøv at indtast det rette nummer igen.");
-        } 
-        
+        }
+
         //Opret kunde
         else
         {
@@ -77,18 +80,18 @@ if (choice == "1")
             Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
             string ticketChoice = Console.ReadLine();
             TicketType ticketType;
-            
+
             //Simpel if statement til at afgøre billettype
             if (ticketChoice == "2")
             {
                 ticketType = TicketType.VIP;
-            } 
-            
+            }
+
             else
             {
                 ticketType = TicketType.Standard;
             }
-            
+
             //Vælg antal biletter
             Console.WriteLine("Hvor mange biletter ønsker du?:  ");
             int ticketAmount = int.Parse(Console.ReadLine());
@@ -104,16 +107,29 @@ if (choice == "1")
                 chosenShow
                 );
             //Tilføj reservation til liste
-            reservationRepository.Add(newReservation);
-            Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
+            //reservationRepository.Add(newReservation);
             Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
             Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
+
+            bool success = reservationService.CreateReservation(newReservation);
+
+            if (success)
+            {
+                Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
+
+
+            }
+            else
+            {
+                Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
+            }
+
         }
 
     }
-    
 
-} 
+
+}
 
 else if (choice == "2")
 {
@@ -138,37 +154,38 @@ else if (choice == "2")
             Console.WriteLine($"Der er {show.Seats} antal ledige pladser og {show.VipSeats} VIP pladser. Book nu mens der stadig er ledige biletter!");
         }
     }
-} else if (choice == "3")
-    {
+}
+else if (choice == "3")
+{
     Console.WriteLine("Angiv venligst dit medarbejder password:");
     string employeePassword = Console.ReadLine();
 
     //Medarbejder loggedIn. Default med ingen fundet medarbejder - eksisterer efter loop
     Employee loggedIn = null;
-    
+
     //Gennemgår alle medarbejdere i listen
     foreach (Employee employee in employeeRepository.GetAll())
     {
         //Tjekker efter match med password
-        if (employee.Password == employeePassword) 
-            { 
-                //Gemmer medarbejder i loggedIn
-                loggedIn = employee;
-                //Stop loop
-                break;
-            }
+        if (employee.Password == employeePassword)
+        {
+            //Gemmer medarbejder i loggedIn
+            loggedIn = employee;
+            //Stop loop
+            break;
+        }
     }
 
     //Hvis loggedIn ikke er null (Medarbejder fundet)
     if (loggedIn != null)
-        {
-            //Sender medarbejder til "Profil"
-            Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
-            Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
+    {
+        //Sender medarbejder til "Profil"
+        Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
+        Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
 
-            Console.WriteLine("Hvad vil du foretage dig nu?");
-        
+        Console.WriteLine("Hvad vil du foretage dig nu?");
+
     }
-    }
+}
 
 

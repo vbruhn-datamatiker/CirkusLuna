@@ -21,16 +21,15 @@ namespace CirkusLuna.ClassLibrary.Repository
             Customer customer1 = new Customer(1, "Gunner", "Gunnersen", "gun@mail.com", "56345678", false);
 
 
-            //------//
-
-
             //Reservation reservation1 =
-            //    //DateTime( year  month day hour min sec
-            //    new Reservation(1, new DateTime(2026, 7, 12, 30, 0),
-            //    TicketType.Regular, 2, 5, customer1, show1);
+            //DateTime( year  month day hour min sec
+            // new Reservation(1, new DateTime (2026, 7, 12, 3, 0),
+            //TicketType.Standard, 2, 5, customer1, show1);
 
 
-            //_reservations.Add(reservation1);
+            //_reservations.Add(reservation1); 
+
+            //------//
 
         }
         public List<Reservation> GetAll()
@@ -64,7 +63,7 @@ namespace CirkusLuna.ClassLibrary.Repository
                     _reservations[i].ReservationTime = reservation.ReservationTime;
                     _reservations[i].TicketType = reservation.TicketType;
                     _reservations[i].TotalSeats = reservation.TotalSeats;
-                   // _reservations[i].SeatNumber = reservation.SeatNumber;
+                    // _reservations[i].SeatNumber = reservation.SeatNumber;
                     _reservations[i].Customer = reservation.Customer;
                     _reservations[i].Show = reservation.Show;
                     break; //no point continuing the loop
@@ -103,7 +102,6 @@ namespace CirkusLuna.ClassLibrary.Repository
                 }
             }
             return result;
-
 
         }
 

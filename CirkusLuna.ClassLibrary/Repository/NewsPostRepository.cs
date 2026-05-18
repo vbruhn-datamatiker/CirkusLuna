@@ -51,7 +51,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             List<NewsPost> result = new List<NewsPost>();
             for (int i = 0; i < _newsposts.Count; i++)
             {
-                if (_newsposts[i].Title == title)
+                if (_newsposts[i].Title.Contains(title))
                 {
                     result.Add(_newsposts[i]);
                 }
