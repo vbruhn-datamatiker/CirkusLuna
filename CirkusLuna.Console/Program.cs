@@ -1,11 +1,14 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 using CirkusLuna.ClassLibrary.Repository;
 
+//Console App Program
 
-
-//Test til console app
-IShowRepository repository = new ShowRepository();
+//Opret repositories
+IShowRepository showRepository = new ShowRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
+IReservationRepository reservationRepository = new ReservationRepository();
+ICustomerRepository customerRepository = new CustomerRepository();
+
 
 //Indledning
 Console.BackgroundColor = ConsoleColor.Blue;
@@ -23,23 +26,101 @@ string choice = Console.ReadLine();
 
 if (choice == "1")
 {
-    List<Show> shows = repository.GetAll();
+    //Vis alle fremtidige shows og artister
+    List<Show> shows = showRepository.GetAll();
 
     foreach (Show show in shows)
     {
-        Console.WriteLine($"Forestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date} !\n Kom og oplev aftenens stjerner:");
+        Console.WriteLine($"SHOW NUMMER {show.Id}\nForestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date} !\n Kom og oplev aftenens stjerner:");
         foreach (Artist artist in show.Artists)
         {
             Console.WriteLine($"{artist.Act}, {artist.FullName}");
         }
     }
+    Console.WriteLine("Bestil biletter nu! - Tast 1");
+    string createReservation = Console.ReadLine();
+    
+    if (createReservation == "1")
+    {
+        Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille biletter til!");
+        int showId = int.Parse(Console.ReadLine());
+        Show chosenShow = showRepository.GetById(showId);
+
+        //Tjekker at indtastet showId er valid
+        if (chosenShow == null)
+        {
+            Console.Write("Show ikke fundet, prøv at indtast det rette nummer igen.");
+        } 
+        
+        //Opret kunde
+        else
+        {
+            Console.WriteLine("Indtast dit navn: ");
+            string firstName = Console.ReadLine();
+
+            Console.WriteLine("Indtast dit efternavn: ");
+            string lastName = Console.ReadLine();
+
+            Console.WriteLine("Indtast din email: ");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Indtast dit telefonnummer: ");
+            string phoneNumber = Console.ReadLine();
+
+            //Generer nyt CustomerID
+            int customerId = customerRepository.GetAll().Count + 1;
+            Customer newCustomer = new Customer(customerId, firstName, lastName, email, phoneNumber, false);
+
+            customerRepository.Add(newCustomer);
+
+            //Vælg billettype
+            Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
+            string ticketChoice = Console.ReadLine();
+            TicketType ticketType;
+            
+            //Simpel if statement til at afgøre billettype
+            if (ticketChoice == "2")
+            {
+                ticketType = TicketType.VIP;
+            } 
+            
+            else
+            {
+                ticketType = TicketType.Standard;
+            }
+            
+            //Vælg antal biletter
+            Console.WriteLine("Hvor mange biletter ønsker du?:  ");
+            int ticketAmount = int.Parse(Console.ReadLine());
+
+            //Opret Reservation
+            int reservationId = reservationRepository.GetAll().Count + 1;
+            Reservation newReservation = new Reservation(
+                reservationId,
+                new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
+                ticketType,
+                ticketAmount,
+                newCustomer,
+                chosenShow
+                );
+            //Tilføj reservation til liste
+            reservationRepository.Add(newReservation);
+            Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
+            Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
+            Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
+        }
+
+    }
+    
+
 } 
 
 else if (choice == "2")
 {
+    //Søg efter show i en bestemt by
     Console.WriteLine("Indtast bynavn");
     string cityInput = Console.ReadLine();
-    List<Show> shows = repository.GetByCity(cityInput);
+    List<Show> shows = showRepository.GetByCity(cityInput);
 
     if (shows.Count == 0)
     {

@@ -6,7 +6,7 @@ namespace CirkusLuna.ClassLibrary.Model
 {
     public enum TicketType
     {
-        Regular,
+        Standard,
         Child,
         VIP
     }
