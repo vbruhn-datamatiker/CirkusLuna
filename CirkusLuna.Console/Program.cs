@@ -214,7 +214,7 @@ else if (choice == "3")
             }
             else if (employeeChoice == "3") 
             {
-                DisplayArtists();
+                //DisplayArtists();
             }
         }
     }
