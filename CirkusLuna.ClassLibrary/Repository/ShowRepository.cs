@@ -7,7 +7,6 @@ namespace CirkusLuna.ClassLibrary.Repository
     {
         //Private list til at holde data
         private List<Show> _shows = new List<Show>();
-        private List<Artist> _artists = new List<Artist>();
 
         //Constructor
         public ShowRepository()

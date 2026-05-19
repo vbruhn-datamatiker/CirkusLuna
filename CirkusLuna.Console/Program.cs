@@ -254,10 +254,11 @@ void DisplayCustomers()
     }
 }
 
-void DisplayArtists()
-{
-    foreach (Artist artist in showRepository.GetAll())
-    {
-            Console.WriteLine($"{artist.Act}, {artist.FullName}");
-    }
-}
+//VIP - IKKE SLET
+//void DisplayArtists()
+//{
+//    foreach (Artist artist in showRepository.GetAll())
+//    {
+//            Console.WriteLine($"{artist.Act}, {artist.FullName}");
+//    }
+//}
