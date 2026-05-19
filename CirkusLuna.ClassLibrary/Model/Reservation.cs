@@ -10,19 +10,19 @@ namespace CirkusLuna.ClassLibrary.Model
         public DateTime ReservationTime { get; set; }
         public TicketType TicketType { get; set; }
         public int TotalSeats { get; set; }
-        //public int SeatNumber { get; set; }
+        public int SeatNumber { get; set; }
         // reservation you can directly access reservation.Customer.FullName or reservation.Show.Date
         //Signaling datatype Customer and Show that it can be null with a ? operator
         public Customer? Customer { get; set; }
         public Show? Show { get; set; }
 
-        public Reservation(int reservationId, DateTime reservationTime, TicketType ticketType, int totalSeats, Customer customer, Show show)
+        public Reservation(int reservationId, DateTime reservationTime, TicketType ticketType, int totalSeats, int seatNumber, Customer customer, Show show)
         {
             ReservationId = reservationId;
             ReservationTime = reservationTime;
             TicketType = ticketType;
             TotalSeats = totalSeats;
-            //SeatNumber = seatNumber;
+            SeatNumber = seatNumber;
             Customer = customer;
             Show = show;
 

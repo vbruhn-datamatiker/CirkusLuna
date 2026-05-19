@@ -63,7 +63,7 @@ namespace CirkusLuna.ClassLibrary.Repository
                     _reservations[i].ReservationTime = reservation.ReservationTime;
                     _reservations[i].TicketType = reservation.TicketType;
                     _reservations[i].TotalSeats = reservation.TotalSeats;
-                    // _reservations[i].SeatNumber = reservation.SeatNumber;
+                    _reservations[i].SeatNumber = reservation.SeatNumber;
                     _reservations[i].Customer = reservation.Customer;
                     _reservations[i].Show = reservation.Show;
                     break; //no point continuing the loop

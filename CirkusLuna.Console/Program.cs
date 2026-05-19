@@ -103,20 +103,20 @@ if (choice == "1")
                 new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
                 ticketType,
                 ticketAmount,
+
                 newCustomer,
                 chosenShow
                 );
             //Tilføj reservation til liste
             //reservationRepository.Add(newReservation);
-            Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
-            Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
 
             bool success = reservationService.CreateReservation(newReservation);
 
             if (success)
             {
                 Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
-
+                Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
+                Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
 
             }
             else
