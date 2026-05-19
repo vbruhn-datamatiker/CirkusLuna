@@ -30,25 +30,8 @@ string choice = Console.ReadLine();
 
 if (choice == "1")
 {
-    //Vis alle fremtidige shows og artister
-    List<Show> shows = showRepository.GetAll();
-
-    foreach (Show show in shows)
-    {
-        Console.BackgroundColor = ConsoleColor.DarkBlue;
-        Console.Write($"SHOW NUMMER {show.Id}");
-        Console.ResetColor();
-        Console.WriteLine(); //Plads til ResetColor();
-
-        Console.WriteLine($"Forestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date}!" +
-            $"\nDer er {show.TotalSeats} pladser tilbage! {show.Seats} standard pladser og {show.VipSeats} VIP pladser." +
-            $"\nKom og oplev aftenens stjerner:\n");
-        foreach (Artist artist in show.Artists)
-        {
-            Console.WriteLine($"{artist.Act}, {artist.FullName}");
-        }
-        Console.WriteLine("------------------------------------ ");
-    }
+    //Kald DisplayShows();
+    DisplayShows();
     
     //Initier billetreservation
     Console.BackgroundColor = ConsoleColor.DarkGreen;
@@ -222,9 +205,16 @@ else if (choice == "3")
             string employeeChoice = Console.ReadLine();
 
             if (employeeChoice == "1")
-            if (employeeChoice == "1")
             {
-                displayShows();
+                DisplayShows();
+            }
+            else if (employeeChoice == "2")
+            {
+                DisplayCustomers();
+            }
+            else if (employeeChoice == "3") 
+            {
+                DisplayArtists();
             }
         }
     }
@@ -232,10 +222,42 @@ else if (choice == "3")
 
 //Funktioner 
 
-void displayShows()
+void DisplayShows()
 {
-    foreach (Show show in showRepository.GetAll())
+    //Vis alle fremtidige shows og artister
+    List<Show> shows = showRepository.GetAll();
+    foreach (Show show in shows)
     {
-        Console.WriteLine($"[{show.Id}] {show.ShowName} - {show.City.Name} d. {show.Date} | Standard: {show.Seats} | VIP: {show.VipSeats}");
+        Console.BackgroundColor = ConsoleColor.DarkBlue;
+        Console.Write($"SHOW NUMMER [{show.Id}]");
+        Console.ResetColor();
+        Console.WriteLine(); //Plads til ResetColor();
+
+        Console.WriteLine($"{show.ShowName} i {show.City.Name} d. {show.Date}" +
+            $"\nDer er {show.TotalSeats} pladser tilbage | {show.Seats} standard pladser og {show.VipSeats} VIP pladser." +
+            $"\nKom og oplev aftenens stjerner:\n");
+
+            foreach (Artist artist in show.Artists)
+            {
+                Console.WriteLine($"{artist.Act}, {artist.FullName}");
+            }
+            Console.WriteLine("------------------------------------");
+
+        }
+}
+
+void DisplayCustomers()
+{
+    foreach (Customer customer in customerRepository.GetAll())
+    {
+        Console.WriteLine($"Kunde nr: [{customer.Id}] - {customer.FullName} - {customer.Email} - {customer.PhoneNumber}");
+    }
+}
+
+void DisplayArtists()
+{
+    foreach (Artist artist in showRepository.GetAll())
+    {
+            Console.WriteLine($"{artist.Act}, {artist.FullName}");
     }
 }

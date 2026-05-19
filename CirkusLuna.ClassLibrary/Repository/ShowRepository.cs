@@ -7,6 +7,7 @@ namespace CirkusLuna.ClassLibrary.Repository
     {
         //Private list til at holde data
         private List<Show> _shows = new List<Show>();
+        private List<Artist> _artists = new List<Artist>();
 
         //Constructor
         public ShowRepository()
@@ -18,6 +19,8 @@ namespace CirkusLuna.ClassLibrary.Repository
             Artist artist3 = new Artist(3, "Johnny", "Ace", "ace@cirkusluna.dk", "Strongman");
             Artist artist4 = new Artist(4, "Benny", "Bent", "bent@cirkusluna.dk", "Jonglør");
             Artist artist5 = new Artist(5, "Mette", "Munk", "munk@cirkusluna.dk", "Linedanser");
+
+            
 
             //Byer
             City copenhagen = new City(1, "København");
