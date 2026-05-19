@@ -96,6 +96,15 @@ if (choice == "1")
             Console.WriteLine("Hvor mange biletter ønsker du?:  ");
             int ticketAmount = int.Parse(Console.ReadLine());
 
+            //Auto-tildeler kunde et sæde, baseret på nuværende bookings for samme show
+            List<Reservation> extistingReservations =
+            reservationService.GetByShow(chosenShow.Id);
+            int nextSeatNumber = 1;
+            foreach (Reservation r in extistingReservations)
+            {
+                nextSeatNumber += r.TotalSeats;
+            }
+
             //Opret Reservation
             int reservationId = reservationRepository.GetAll().Count + 1;
             Reservation newReservation = new Reservation(
@@ -103,13 +112,12 @@ if (choice == "1")
                 new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
                 ticketType,
                 ticketAmount,
-
+                nextSeatNumber,
                 newCustomer,
                 chosenShow
                 );
-            //Tilføj reservation til liste
-            //reservationRepository.Add(newReservation);
 
+            //Tjek fra servicelag at reservationen kan foretages
             bool success = reservationService.CreateReservation(newReservation);
 
             if (success)
@@ -117,6 +125,7 @@ if (choice == "1")
                 Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
                 Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
                 Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
+                Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
 
             }
             else
