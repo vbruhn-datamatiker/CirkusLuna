@@ -34,7 +34,7 @@ if (choice == "1")
         Console.WriteLine($"SHOW NUMMER {show.Id}\nForestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date} !\n Kom og oplev aftenens stjerner:");
         foreach (Artist artist in show.Artists)
         {
-            Console.WriteLine($"{artist.Act}, {artist.FullName}");
+            Console.WriteLine($"{artist.Act}, {artist.FullName}\n");
         }
     }
     Console.WriteLine("Bestil biletter nu! - Tast 1");
