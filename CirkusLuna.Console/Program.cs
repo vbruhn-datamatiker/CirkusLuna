@@ -4,13 +4,14 @@ using CirkusLuna.ClassLibrary.Service;
 
 //Console App Program
 
-//Opret repositories
+//Forbind repositories
 IShowRepository showRepository = new ShowRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 IReservationRepository reservationRepository = new ReservationRepository();
 ICustomerRepository customerRepository = new CustomerRepository();
 IShowService showService = new ShowService(showRepository);
 IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
+INewsPostRepository newsPostRepository = new NewsPostRepository();
 
 
 //Indledning
@@ -22,7 +23,7 @@ Console.WriteLine("------------------ Menu ------------------");
 
 Console.WriteLine("Se alle fremtidige forestillinger - Tast 1");
 Console.WriteLine("Søg efter den næste forestilling i en by - Tast 2");
-Console.WriteLine("\nLog ind som medarbejder - Tast 3");
+Console.WriteLine("\nLog ind som medarbejder - Tast 3\n");
 
 //Søg efter forestillinger
 string choice = Console.ReadLine();
@@ -34,13 +35,27 @@ if (choice == "1")
 
     foreach (Show show in shows)
     {
-        Console.WriteLine($"SHOW NUMMER {show.Id}\nForestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date} !\n Kom og oplev aftenens stjerner:");
+        Console.BackgroundColor = ConsoleColor.DarkBlue;
+        Console.Write($"SHOW NUMMER {show.Id}");
+        Console.ResetColor();
+        Console.WriteLine(); //Plads til ResetColor();
+
+        Console.WriteLine($"Forestillingen {show.ShowName} finder sted i {show.City.Name} d. {show.Date}!" +
+            $"\nDer er {show.TotalSeats} pladser tilbage! {show.Seats} standard pladser og {show.VipSeats} VIP pladser." +
+            $"\nKom og oplev aftenens stjerner:\n");
         foreach (Artist artist in show.Artists)
         {
-            Console.WriteLine($"{artist.Act}, {artist.FullName}\n");
+            Console.WriteLine($"{artist.Act}, {artist.FullName}");
         }
+        Console.WriteLine("------------------------------------ ");
     }
-    Console.WriteLine("Bestil biletter nu! - Tast 1");
+    
+    //Initier billetreservation
+    Console.BackgroundColor = ConsoleColor.DarkGreen;
+    Console.Write("Bestil biletter nu! - Tast 1");
+    Console.ResetColor();
+    Console.WriteLine(); //Også her, ellers fortsatte BackgroundColor...
+
     string createReservation = Console.ReadLine();
 
     if (createReservation == "1")
@@ -192,9 +207,35 @@ else if (choice == "3")
         Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
         Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
 
-        Console.WriteLine("Hvad vil du foretage dig nu?");
+        //While loop for at holde konsol kørende
+        bool employeeActive = true;
+        while (employeeActive)
+        {
+            Console.WriteLine("\n----- Menu -----\n Vælg handling ved at angive nr. \n");
+            Console.WriteLine("1 - Vis liste over forestillinger");
+            Console.WriteLine("2 - Vis liste over kunder");
+            Console.WriteLine("3 - Vis liste over artister");
+            Console.WriteLine("4 - Vis liste over nyheder");
 
+            Console.WriteLine("0 - Log ud");
+
+            string employeeChoice = Console.ReadLine();
+
+            if (employeeChoice == "1")
+            if (employeeChoice == "1")
+            {
+                displayShows();
+            }
+        }
     }
 }
 
+//Funktioner 
 
+void displayShows()
+{
+    foreach (Show show in showRepository.GetAll())
+    {
+        Console.WriteLine($"[{show.Id}] {show.ShowName} - {show.City.Name} d. {show.Date} | Standard: {show.Seats} | VIP: {show.VipSeats}");
+    }
+}
