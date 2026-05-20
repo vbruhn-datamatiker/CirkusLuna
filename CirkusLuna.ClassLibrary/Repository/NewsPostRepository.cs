@@ -9,22 +9,20 @@ namespace CirkusLuna.ClassLibrary.Repository
     {
         private List<NewsPost> _newsposts = new List<NewsPost>();
 
+        //NewsPost Constructor
         public NewsPostRepository()
         {
-            //data creation testing
-
-            //year / mon/ day
-            NewsPost post1 = new NewsPost(1, "Sæsonen 1 starter!", "Vi er klar til en ny sæson...", new DateTime(2026, 5, 1));
-            NewsPost post2 = new NewsPost(2, "Sæsonen 2 starter!", "Vi er klar til en ny sæson...", new DateTime(2026, 6, 1));
+            //Oprettelse af NewsPosts
+            NewsPost post1 = new NewsPost(1, "Ny Elefant!", "Vi har fået en ny elefant....", new DateTime(2026, 5, 1));
+            NewsPost post2 = new NewsPost(2, "10 års Jubilæum", "Benny Blæk har 10 års jubilæum, det fejrer vi med...", new DateTime(2026, 6, 1));
             NewsPost post3 = new NewsPost(3, "Sæsonen 3 starter!", "Vi er klar til en ny sæson...", new DateTime(2026, 7, 1));
-            NewsPost post4 = new NewsPost(4, "Sæsonen 4 starter!", "Vi er klar til en ny sæson...", new DateTime(2026, 8, 1));
+            NewsPost post4 = new NewsPost(4, "Ny Stjerne!", "Kom og oplev vores nyeste artist...", new DateTime(2026, 8, 1));
 
             _newsposts.Add(post1);
             _newsposts.Add(post2);
             _newsposts.Add(post3);
             _newsposts.Add(post4);
 
-            //------//
         }
 
         public List<NewsPost> GetAll()

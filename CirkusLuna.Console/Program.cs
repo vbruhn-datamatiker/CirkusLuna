@@ -36,7 +36,7 @@ if (choice == "1")
     
     //Initier billetreservation
     Console.BackgroundColor = ConsoleColor.DarkGreen;
-    Console.Write("Bestil biletter nu! - Tast 1");
+    Console.Write("Bestil billetter nu! - Tast 1");
     Console.ResetColor();
     Console.WriteLine(); //Også her, ellers fortsatte BackgroundColor...
 
@@ -44,7 +44,7 @@ if (choice == "1")
 
     if (createReservation == "1")
     {
-        Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille biletter til!");
+        Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
         int showId = int.Parse(Console.ReadLine());
         Show chosenShow = showRepository.GetById(showId);
 
@@ -92,7 +92,7 @@ if (choice == "1")
             }
 
             //Vælg antal biletter
-            Console.WriteLine("Hvor mange biletter ønsker du?:  ");
+            Console.WriteLine("Hvor mange billetter ønsker du?:  ");
             int ticketAmount = int.Parse(Console.ReadLine());
 
             //Auto-tildeler kunde et sæde, baseret på nuværende bookings for samme show
@@ -199,7 +199,8 @@ else if (choice == "3")
             Console.WriteLine("1 - Vis liste over forestillinger");
             Console.WriteLine("2 - Vis liste over kunder");
             Console.WriteLine("3 - Vis liste over artister");
-            Console.WriteLine("4 - Vis liste over nyheder");
+            Console.WriteLine("4 - Vis liste over reservationer");
+            Console.WriteLine("5 - Vis liste over nyheder");
 
             Console.WriteLine("0 - Log ud");
 
@@ -213,9 +214,22 @@ else if (choice == "3")
             {
                 DisplayCustomers();
             }
-            else if (employeeChoice == "3") 
+            else if (employeeChoice == "3")
             {
                 DisplayArtists();
+            }
+            else if (employeeChoice == "4")
+            {
+                DisplayReservation();
+            }
+            else if (employeeChoice == "5")
+            {
+                DisplayNews();
+            }
+
+            else if (employeeChoice == "0")
+            {
+                employeeActive = false;
             }
         }
     }
@@ -247,6 +261,14 @@ void DisplayShows()
         }
 }
 
+void DisplayReservation()
+{
+    foreach (Reservation reservation in reservationRepository.GetAll())
+    {
+        Console.WriteLine($"");
+    }
+}
+
 void DisplayCustomers()
 {
     foreach (Customer customer in customerRepository.GetAll())
@@ -260,5 +282,13 @@ void DisplayArtists()
     foreach (Artist artist in artistRepository.GetAll())
     {
         Console.WriteLine($"[{artist.Id}] {artist.Act}, {artist.FullName}");
+    }
+}
+
+void DisplayNews()
+{
+    foreach (NewsPost post in newsPostRepository.GetAll())
+    {
+        Console.WriteLine($"[{post.NewsPostId}] | {post.Title} | {post.Content} - Udgivet d. {post.PublishedDateTime}");
     }
 }

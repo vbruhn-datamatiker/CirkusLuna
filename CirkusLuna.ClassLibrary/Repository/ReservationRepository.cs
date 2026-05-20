@@ -18,7 +18,7 @@ namespace CirkusLuna.ClassLibrary.Repository
 
             Show show1 = new Show(1, "Cirkus Luna", new DateOnly(2026, 7, 12), 150, 10, copenhagen);
 
-            Customer customer1 = new Customer(1, "Gunner", "Gunnersen", "gun@mail.com", "56345678", false);
+            Customer customer1 = new Customer(1, "Gunner TEEEST", "Gunnersen", "gun@mail.com", "56345678", false);
 
 
             //Reservation reservation1 =
