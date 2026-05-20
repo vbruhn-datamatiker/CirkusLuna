@@ -601,7 +601,45 @@ void UpdateShow()
                 showRepository.Update(show);
                 Console.WriteLine($"Du har ændret navnet til {show.ShowName}");
             }
+            else if (updateShowChoice == "2")
+            {
+                Console.WriteLine("Angiv ny dato for show i YYYY-MM-DD format:");
+                string newDateInput = Console.ReadLine();
+                DateOnly newDate = DateOnly.Parse(newDateInput);
 
+                //Ændre show.Date til newDate
+                show.Date = newDate;
+                showRepository.Update(show);
+                Console.WriteLine($"Dato ændret til {show.Date}");
+
+            }
+            else if (updateShowChoice == "3")
+            {
+                Console.WriteLine("Angiv hvor mange ledige standard pladser der skal være: ");
+                int UpdatedStandardSeat = int.Parse(Console.ReadLine());
+                show.Seats = UpdatedStandardSeat;
+                showRepository.Update(show);
+                Console.WriteLine($"Du har oprettet {show.Seats} standard pladser. ");
+            }
+            else if (updateShowChoice == "4")
+            {
+                Console.WriteLine("Angiv hvor mange ledige VIP pladser der skal være: ");
+                int UpdatedVipSeat = int.Parse(Console.ReadLine());
+                show.Seats = UpdatedVipSeat;
+                showRepository.Update(show);
+                Console.WriteLine($"Du har oprettet {show.VipSeats} VIP pladser. ");
+            }
+            else if (updateShowChoice == "5")
+            {
+                Console.WriteLine($"Hvor skal showet finde sted istedet for {show.City.Name}?: ");
+                string UpdatedShowCity = Console.ReadLine();
+                //Opret ny city objekt
+                City newCity = new City(show.City.Id, UpdatedShowCity);
+                show.City = newCity;
+                showRepository.Update(show);
+                Console.WriteLine($"{show.ShowName} er flyttet til {show.City.Name}");
+            }
+            //Afslut updateShow
             else if (updateShowChoice == "0")
             {
                 updateShow = false;
