@@ -176,8 +176,16 @@ while (true)
                     Console.WriteLine("1 - Vil du oprette en reservation til et bestemt show?");
                     Console.WriteLine("2 - Vil du ændre en eksisterende reservation?");
 
+                    Console.WriteLine("\n0 - Gå tilbage til Menu");
                     string employeeEditReservation = Console.ReadLine();
-                    if (employeeEditReservation == "2")
+                    if (employeeEditReservation == "1")
+                    {
+                        Console.WriteLine("Angiv ID på det show du vil oprette en reservation til: ");
+                        int employeeCreateReservation = int.Parse(Console.ReadLine());
+                        Show chosenShow = showRepository.GetById(employeeCreateReservation);
+                        CreateReservation(chosenShow);
+                    }
+                    else if (employeeEditReservation == "2") 
                     {
                         UpdateReservation();
                     }
@@ -207,13 +215,34 @@ void DisplayShows()
     List<Show> shows = showRepository.GetAll();
     foreach (Show show in shows)
     {
+        //Tilføjet d. 20-5
+        //Udregner til booked seats for det valgte show
+        //(show.TotalSeats) udskiftes med RemainingSeats, så det der oprettes i ReservationRepo også vises.
+        int bookedStandardSeats = 0;
+        int bookedVipSeats = 0;
+            foreach (Reservation r in reservationRepository.GetByShow(show.Id))
+            {
+                if (r.TicketType == TicketType.VIP)
+                {
+                    bookedVipSeats += r.TotalSeats;
+                } 
+                else
+                {
+                    bookedStandardSeats += r.TotalSeats;
+                }
+            }
+
+            int remainingStandard = show.Seats - bookedStandardSeats;
+            int remainingVip = show.VipSeats - bookedVipSeats;
+        
+        //Display til konsol
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.Write($"SHOW NUMMER [{show.Id}]");
         Console.ResetColor();
         Console.WriteLine(); //Plads til ResetColor();
 
         Console.WriteLine($"{show.ShowName} i {show.City.Name} d. {show.Date}" +
-            $"\nDer er {show.TotalSeats} pladser tilbage | {show.Seats} standard pladser og {show.VipSeats} VIP pladser." +
+            $"\nDer er {remainingStandard} standard pladser og {remainingVip} VIP pladser tilbage! Skynd dig at bestille inden de er udsolgt! " +
             $"\nKom og oplev aftenens stjerner:\n");
 
             foreach (Artist artist in show.Artists)
