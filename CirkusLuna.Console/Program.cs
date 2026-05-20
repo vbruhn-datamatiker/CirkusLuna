@@ -2,19 +2,19 @@
 using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
 
+//Forbind repositories - ligger uden for while(true) så data bevares.
+IArtistRepository artistRepository = new ArtistRepository();
+IShowRepository showRepository = new ShowRepository(artistRepository);
+IEmployeeRepository employeeRepository = new EmployeeRepository();
+ICustomerRepository customerRepository = new CustomerRepository();
+IShowService showService = new ShowService(showRepository);
+IReservationRepository reservationRepository = new ReservationRepository(showRepository, customerRepository);
+IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
+INewsPostRepository newsPostRepository = new NewsPostRepository();
+
 //Console App Program
 while (true)
 {
-
-    //Forbind repositories
-    IArtistRepository artistRepository = new ArtistRepository();
-    IShowRepository showRepository = new ShowRepository(artistRepository);
-    IEmployeeRepository employeeRepository = new EmployeeRepository();
-    ICustomerRepository customerRepository = new CustomerRepository();
-    IShowService showService = new ShowService(showRepository);
-    IReservationRepository reservationRepository = new ReservationRepository(showRepository, customerRepository);
-    IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
-    INewsPostRepository newsPostRepository = new NewsPostRepository();
 
 
     //Indledning
