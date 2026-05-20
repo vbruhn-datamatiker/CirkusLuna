@@ -6,6 +6,7 @@ namespace CirkusLuna.ClassLibrary.Model
 {
     public class Reservation
     {
+        //Reservation properties
         public int ReservationId { get; set; }
         public DateTime ReservationTime { get; set; }
         public TicketType TicketType { get; set; }
@@ -16,6 +17,7 @@ namespace CirkusLuna.ClassLibrary.Model
         public Customer? Customer { get; set; }
         public Show? Show { get; set; }
 
+        //Constructor
         public Reservation(int reservationId, DateTime reservationTime, TicketType ticketType, int totalSeats, int seatNumber, Customer customer, Show show)
         {
             ReservationId = reservationId;

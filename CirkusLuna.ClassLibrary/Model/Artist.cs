@@ -8,8 +8,9 @@
         public string Act {  get; set; } = string.Empty; //Det de kan, f.eks junglere, akrobat m.m
     
         //Constructor
+        //base() kalder Person's constructor
         public Artist(int id, string firstName, string lastName, string email, string act)
-            : base(id, firstName, lastName, email) //Delte fields håndteres af base class
+            : base(id, firstName, lastName, email) 
         {
             Act = act;
         }

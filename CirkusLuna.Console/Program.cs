@@ -190,6 +190,8 @@ void DisplayShows()
         }
 }
 
+// -------------------- Display() funktioner ----------------------------
+
 void DisplayReservation()
 {
     foreach (Reservation reservation in reservationRepository.GetAll())
@@ -222,7 +224,9 @@ void DisplayNews()
     }
 }
 
-//Funktion til at oprette re4servation ud fra chosenShow
+// -------------------- Create() funktioner ----------------------------
+
+//Funktion til at oprette reservation ud fra chosenShow
 void CreateReservation(Show chosenShow)
 {
     Console.WriteLine("Indtast navn: ");
@@ -300,3 +304,7 @@ void CreateReservation(Show chosenShow)
         Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
     }
 }
+
+// -------------------- Update() funktioner ----------------------------
+
+// -------------------- Delete() funktioner ----------------------------

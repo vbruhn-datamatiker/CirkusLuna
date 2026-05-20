@@ -17,7 +17,6 @@
             }
         }
 
-
         public List<Artist> Artists { get; set; } = new List<Artist>();
         
         //Store city object - By hvor forestillingen finder sted
