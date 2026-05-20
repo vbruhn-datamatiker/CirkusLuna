@@ -8,10 +8,16 @@ namespace CirkusLuna.ClassLibrary.Repository
         //Private list til at holde data
         private List<Show> _shows = new List<Show>();
 
-        //Constructor
-        public ShowRepository()
+        //Constructor - får IArtistRepository som parameter
+        public ShowRepository(IArtistRepository artistRepository)
         {
-            
+            //Henter artister fra ArtistRepository
+            Artist artist1 = artistRepository.GetById(1);
+            Artist artist2 = artistRepository.GetById(2);
+            Artist artist3 = artistRepository.GetById(3);
+            Artist artist4 = artistRepository.GetById(4);
+            Artist artist5 = artistRepository.GetById(5);
+
             //Byer
             City copenhagen = new City(1, "København");
             City roskilde = new City(2, "Roskilde");

@@ -5,7 +5,8 @@ using CirkusLuna.ClassLibrary.Service;
 //Console App Program
 
 //Forbind repositories
-IShowRepository showRepository = new ShowRepository();
+IArtistRepository artistRepository = new ArtistRepository();
+IShowRepository showRepository = new ShowRepository(artistRepository);
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 IReservationRepository reservationRepository = new ReservationRepository();
 ICustomerRepository customerRepository = new CustomerRepository();
@@ -214,7 +215,7 @@ else if (choice == "3")
             }
             else if (employeeChoice == "3") 
             {
-                //DisplayArtists();
+                DisplayArtists();
             }
         }
     }
@@ -254,11 +255,10 @@ void DisplayCustomers()
     }
 }
 
-//VIP - IKKE SLET
-//void DisplayArtists()
-//{
-//    foreach (Artist artist in showRepository.GetAll())
-//    {
-//            Console.WriteLine($"{artist.Act}, {artist.FullName}");
-//    }
-//}
+void DisplayArtists()
+{
+    foreach (Artist artist in artistRepository.GetAll())
+    {
+        Console.WriteLine($"[{artist.Id}] {artist.Act}, {artist.FullName}");
+    }
+}

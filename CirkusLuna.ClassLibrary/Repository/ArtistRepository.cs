@@ -12,12 +12,18 @@ namespace CirkusLuna.ClassLibrary.Repository
         public ArtistRepository()
         {
             //Artister
-            //Har ændret artist2 =new Artist(2... på dem her så de passer 
             Artist artist1 = new Artist(1, "Mona", "Lisa", "mlisa@cirkusluna.dk", "Akrobat");
             Artist artist2 = new Artist(2, "Hr.", "Skæg", "skæg@cirkusluna.dk", "Klovn");
             Artist artist3 = new Artist(3, "Johnny", "Ace", "ace@cirkusluna.dk", "Strongman");
             Artist artist4 = new Artist(4, "Benny", "Bent", "bent@cirkusluna.dk", "Jonglør");
             Artist artist5 = new Artist(5, "Mette", "Munk", "munk@cirkusluna.dk", "Linedanser");
+
+            //Tilføj artister til _artistList
+            _artistList.Add(artist1);
+            _artistList.Add(artist2);
+            _artistList.Add(artist3);
+            _artistList.Add(artist4);
+            _artistList.Add(artist5);
         }
 
         public List<Artist> GetAll()
