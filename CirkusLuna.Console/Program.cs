@@ -141,6 +141,17 @@ else if (choice == "3")
             else if (employeeChoice == "2")
             {
                 DisplayCustomers();
+                Console.WriteLine("1 - Ønsker du at ændre oplysninger på en kunde?");
+                Console.WriteLine("0 - Gå tilbage til Menu");
+                string employeeEditCustomer = Console.ReadLine();
+                if (employeeEditCustomer == "1")
+                {
+                    UpdateCustomer();
+                }
+                else if (employeeEditCustomer == "0")
+                {
+                    //Returnerer til employeeActive
+                }
             }
             else if (employeeChoice == "3")
             {
@@ -165,6 +176,7 @@ else if (choice == "3")
 }
 
 //Funktioner 
+// -------------------- Display() funktioner ----------------------------
 
 void DisplayShows()
 {
@@ -189,8 +201,6 @@ void DisplayShows()
 
         }
 }
-
-// -------------------- Display() funktioner ----------------------------
 
 void DisplayReservation()
 {
@@ -306,5 +316,47 @@ void CreateReservation(Show chosenShow)
 }
 
 // -------------------- Update() funktioner ----------------------------
+
+//UpdateCustomer
+void UpdateCustomer()
+{
+    //Finder eksisterende kunde på ID
+    Console.WriteLine("Skriv ID på kunde der skal ændres: ");
+    int existingCustomerId = int.Parse(Console.ReadLine());
+    Customer customer = customerRepository.GetById(existingCustomerId);
+
+    //Holder update() kørende
+    bool updateCustomer = true;
+    while (updateCustomer == true) 
+    {   
+        //Oversigt over mulige handlinger
+        Console.WriteLine("\n----- Update Menu -----\n Vælg handling ved at angive nr. \n");
+        Console.WriteLine("1 - Ændre Fornavn + Efternavn");
+        Console.WriteLine("2 - Ændre Email");
+        Console.WriteLine("3 - Ændre telefon nr.");
+        Console.WriteLine("4 - Ændre kundestatus: Standard / VIP\n");
+
+        Console.WriteLine("0 - Afslut ændringer");
+
+        int updateCustomerChoice = int.Parse(Console.ReadLine());
+
+        if (updateCustomerChoice == 1)
+        {
+            Console.WriteLine("Indtast nyt fornavn:");
+            customer.FirstName = Console.ReadLine();
+            Console.WriteLine("Indtast nyt efternavn:");
+            customer.LastName = Console.ReadLine();
+            //Opdater ændringer
+            customerRepository.Update(customer);
+
+        } 
+        
+        else if (updateCustomerChoice == 0)
+        {
+            updateCustomer = false;
+        }
+
+    }
+}
 
 // -------------------- Delete() funktioner ----------------------------
