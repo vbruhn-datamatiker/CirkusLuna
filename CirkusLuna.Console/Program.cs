@@ -359,8 +359,6 @@ void CreateReservation(Show chosenShow)
         Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
         Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
         Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
-        //Tilføj reservationen til listen!
-        reservationRepository.Add(newReservation);
     }
     else
     {
