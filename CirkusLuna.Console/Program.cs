@@ -135,6 +135,8 @@ else if (choice == "3")
             if (employeeChoice == "1")
             {
                 DisplayShows();
+                Console.WriteLine("Vil du oprette et nyt show?");
+
             }
             else if (employeeChoice == "2")
             {
@@ -147,6 +149,7 @@ else if (choice == "3")
             else if (employeeChoice == "4")
             {
                 DisplayReservation();
+                Console.WriteLine("Vil du oprette en reservation til et bestemt show?");
             }
             else if (employeeChoice == "5")
             {

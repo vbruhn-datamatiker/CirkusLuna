@@ -93,5 +93,30 @@ namespace CirkusLuna.ClassLibrary.Repository
             return result;
         }
 
+        public void Add(Show show)
+        {
+            _shows.Add(show);
+        }
+
+        public void Update(Show show)
+        {
+            for (int i = 0;  i < _shows.Count; i++)
+            {
+                if (_shows[i].Id == show.Id)
+                {
+                    _shows[i].ShowName = show.ShowName;
+                    _shows[i].Date = show.Date;
+                    _shows[i].Seats = show.Seats;
+                    _shows[i].VipSeats = show.VipSeats;
+                    _shows[i].City = show.City;
+                }
+            }
+        }
+
+        public void Delete(int id)
+        {
+            _shows.Remove(GetById(id));
+        }
+
     }
 }
