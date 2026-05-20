@@ -46,6 +46,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             _customerList.Add(customer);
 
         }
+
         public void Update(Customer customer)
         {
             for (int i = 0; i < _customerList.Count; i++)

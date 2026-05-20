@@ -54,7 +54,7 @@ if (choice == "1")
             Console.Write("Show ikke fundet, prøv at indtast det rette nummer igen.");
         }
 
-        //Opret kunde
+        //Opret kunde - kald CreateReservation(chosenShow)
         else
         {
             CreateReservation(chosenShow);

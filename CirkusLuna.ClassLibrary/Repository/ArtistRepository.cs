@@ -42,6 +42,36 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
             return null;
         }
+
+        //Add funktion, så nye artister kan oprettes i programmet
+        public void Add(Artist artist)
+        {
+            _artistList.Add(artist);
+        }
+
+        //Update funktion, så artister kan ændres i programmet
+        public void Update(Artist artist)
+        {
+            for (int i = 0; i < _artistList.Count; i++)
+            {
+                if (_artistList[i].Id == artist.Id)
+                {
+                    _artistList[i].FirstName = artist.FirstName;
+                    _artistList[i].LastName = artist.LastName;
+                    _artistList[i].Email = artist.Email;
+                    _artistList[i].Act = artist.Act;
+                    break;
+                }
+            }
+
+        }
+
+        //Delete funktion, så artister kan slettes i programmet
+        public void Delete(int id)
+        {
+            _artistList.Remove(GetById(id));
+        }
+
     }
 
 }
