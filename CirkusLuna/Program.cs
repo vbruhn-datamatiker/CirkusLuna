@@ -1,11 +1,18 @@
 using CirkusLuna.ClassLibrary.Repository;
+using CirkusLuna.ClassLibrary.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 // Register repositories for dependency injection
+builder.Services.AddSingleton<IArtistRepository, ArtistRepository>();
 builder.Services.AddSingleton<IShowRepository, ShowRepository>();
 builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
 builder.Services.AddSingleton<IReservationRepository, ReservationRepository>();
 builder.Services.AddSingleton<INewsPostRepository, NewsPostRepository>();
+
+// Services 
+builder.Services.AddSingleton<IShowService, ShowService>();
+builder.Services.AddSingleton<IReservationService, ReservationService>();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 

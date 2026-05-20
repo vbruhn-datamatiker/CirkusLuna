@@ -1,0 +1,58 @@
+﻿@page
+@model CirkusLuna.Pages.ShowsModel
+@using CirkusLuna.ClassLibrary.Model
+@{
+}
+
+<div class="container mt-4">
+
+    <h1>Forestillinger</h1>
+
+    @* the form *@
+
+    <form method="get">
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control"
+                   name="SearchCity"
+                   placeholder="Søg efter by..."
+                   value="@Model.SearchCity" />
+            <button class="btn btn-primary" type="submit">Søg</button>
+
+        </div>
+    </form>
+
+
+    @foreach (Show show in Model.Shows)
+    {
+   
+        //show stuff
+        <div class="card mb-3">
+
+            <div class="card-header">
+
+                <h5>@show.ShowName</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p><strong>By:</strong> @show.City.Name</p>
+                <p><strong>Dato:</strong> @show.Date</p>
+                <p><strong>Ledige pladser:</strong> @show.Seats</p>
+                <p><strong>VIP pladser:</strong> @show.VipSeats</p>
+                <h6>Artister:</h6>
+
+                @foreach (Artist artist in show.Artists)
+                {
+                    <span class="badge bg-primary">@artist.FullName - @artist.Act </span>
+                }
+               
+            </div>
+
+        </div>
+
+        
+    }
+
+</div>
