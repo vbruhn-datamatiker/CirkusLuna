@@ -98,6 +98,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             _shows.Add(show);
         }
 
+        //Funktion til at kunne opdatere Shows
         public void Update(Show show)
         {
             for (int i = 0;  i < _shows.Count; i++)

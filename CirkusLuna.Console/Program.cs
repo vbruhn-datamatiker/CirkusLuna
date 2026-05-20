@@ -137,7 +137,27 @@ while (true)
                 if (employeeChoice == "1")
                 {
                     DisplayShows();
-                    Console.WriteLine("Vil du oprette et nyt show?");
+                    Console.WriteLine("1 - Vil du oprette et nyt show?");
+                    Console.WriteLine("2 - Vil du ændre et eksisterende show?");
+                    Console.WriteLine("3 - Vil du slette et eksisterende show?");
+
+                    Console.WriteLine("\n0 - Gå tilbage til Menu");
+
+                    string employeeEditShow = Console.ReadLine();
+
+                    if (employeeEditShow == "1")
+                    {
+                        //CreateShow();
+                    } 
+                    else if (employeeEditShow == "2")
+                    {
+                        UpdateShow();
+                    }
+                    else if (employeeEditShow == "3")
+                    {
+                        //Logik til DeleteShow
+                    }
+
 
                 }
                 else if (employeeChoice == "2")
@@ -487,7 +507,7 @@ void UpdateReservation()
         Console.WriteLine("\n----- Update Menu -----\n Vælg handling ved at angive nr. \n");
         Console.WriteLine("1 - Ændre kundeoplysninger (Email og tlf.)");
         Console.WriteLine("2 - Ændre antal billetter: ");
-        Console.WriteLine("3 - Ændre billettype (Standard/VIP): ");
+        //Console.WriteLine("3 - Ændre billettype (Standard/VIP): "); - ikke skrevet
         //Console.WriteLine("4 - Ændre til et andet show"); - Gemmer den her, hvis vi ønsker at implementere den
 
         Console.WriteLine("0 - Afslut ændringer");
@@ -552,6 +572,45 @@ void UpdateReservation()
     }
 }
 
+void UpdateShow()
+    {
+        Console.WriteLine("Angiv ID på det show der skal ændres: ");
+        int existingShowId = int.Parse(Console.ReadLine());
+        Show show = showRepository.GetById(existingShowId);
+
+        //Holder update() kørende
+        bool updateShow = true;
+        while (updateShow == true)
+        {
+            //Oversigt over mulige handlinger
+            Console.WriteLine("\n----- Update Menu -----\n Vælg handling ved at angive nr. \n");
+            Console.WriteLine("1 - Ændre navn på show: ");
+            Console.WriteLine("2 - Ændre dato for show: ");
+            Console.WriteLine("3 - Ændre antal ledige standard pladser: ");
+            Console.WriteLine("4 - Ændre antal ledige VIP pladser: ");
+            Console.WriteLine("5 - Ændre by for show: ");
+
+            Console.WriteLine("\n0 - Gå tilbage til Menu. ");
+
+            string updateShowChoice = Console.ReadLine();
+
+            if (updateShowChoice == "1")
+            {
+                Console.WriteLine("Angiv nyt navn til show: ");
+                show.ShowName = Console.ReadLine();
+                showRepository.Update(show);
+                Console.WriteLine($"Du har ændret navnet til {show.ShowName}");
+            }
+
+            else if (updateShowChoice == "0")
+            {
+                updateShow = false;
+            }
+
+
+        }
+
+    }
 
 
     // -------------------- Delete() funktioner ----------------------------
