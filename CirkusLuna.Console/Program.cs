@@ -3,196 +3,200 @@ using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
 
 //Console App Program
-
-//Forbind repositories
-IArtistRepository artistRepository = new ArtistRepository();
-IShowRepository showRepository = new ShowRepository(artistRepository);
-IEmployeeRepository employeeRepository = new EmployeeRepository();
-IReservationRepository reservationRepository = new ReservationRepository();
-ICustomerRepository customerRepository = new CustomerRepository();
-IShowService showService = new ShowService(showRepository);
-IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
-INewsPostRepository newsPostRepository = new NewsPostRepository();
-
-
-//Indledning
-Console.BackgroundColor = ConsoleColor.Blue;
-Console.WriteLine("--------------------- Velkommen til Cirkus Luna ---------------------\n");
-Console.ResetColor();
-
-Console.WriteLine("------------------ Menu ------------------");
-
-Console.WriteLine("Se alle fremtidige forestillinger - Tast 1");
-Console.WriteLine("Søg efter den næste forestilling i en by - Tast 2");
-Console.WriteLine("\nLog ind som medarbejder - Tast 3\n");
-
-//Søg efter forestillinger
-string choice = Console.ReadLine();
-
-if (choice == "1")
+while (true)
 {
-    //Kald DisplayShows();
-    DisplayShows();
-    
-    //Initier billetreservation
-    Console.BackgroundColor = ConsoleColor.DarkGreen;
-    Console.Write("Bestil billetter nu! - Tast 1");
+
+    //Forbind repositories
+    IArtistRepository artistRepository = new ArtistRepository();
+    IShowRepository showRepository = new ShowRepository(artistRepository);
+    IEmployeeRepository employeeRepository = new EmployeeRepository();
+    ICustomerRepository customerRepository = new CustomerRepository();
+    IShowService showService = new ShowService(showRepository);
+    IReservationRepository reservationRepository = new ReservationRepository(showRepository, customerRepository);
+    IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
+    INewsPostRepository newsPostRepository = new NewsPostRepository();
+
+
+    //Indledning
+    Console.BackgroundColor = ConsoleColor.Blue;
+    Console.WriteLine("--------------------- Velkommen til Cirkus Luna ---------------------\n");
     Console.ResetColor();
-    Console.WriteLine(); //Også her, ellers fortsatte BackgroundColor...
 
-    string createReservation = Console.ReadLine();
+    Console.WriteLine("------------------ Menu ------------------");
 
-    if (createReservation == "1")
+    Console.WriteLine("Se alle fremtidige forestillinger - Tast 1");
+    Console.WriteLine("Søg efter den næste forestilling i en by - Tast 2");
+    Console.WriteLine("\nLog ind som medarbejder - Tast 3\n");
+
+    //Søg efter forestillinger
+    string choice = Console.ReadLine();
+
+    if (choice == "1")
     {
-        Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
-        int showId = int.Parse(Console.ReadLine());
-        Show chosenShow = showRepository.GetById(showId);
+        //Kald DisplayShows();
+        DisplayShows();
 
-        //Tjekker at indtastet showId er valid
-        if (chosenShow == null)
+        //Initier billetreservation
+        Console.BackgroundColor = ConsoleColor.DarkGreen;
+        Console.Write("Bestil billetter nu! - Tast 1");
+        Console.ResetColor();
+        Console.WriteLine(); //Også her, ellers fortsatte BackgroundColor...
+
+        string createReservation = Console.ReadLine();
+
+        if (createReservation == "1")
         {
-            Console.Write("Show ikke fundet, prøv at indtast det rette nummer igen.");
+            Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
+            int showId = int.Parse(Console.ReadLine());
+            Show chosenShow = showRepository.GetById(showId);
+
+            //Tjekker at indtastet showId er valid
+            if (chosenShow == null)
+            {
+                Console.Write("Show ikke fundet, prøv at indtast det rette nummer igen.");
+            }
+
+            //Opret kunde - kald CreateReservation(chosenShow)
+            else
+            {
+                CreateReservation(chosenShow);
+            }
+
         }
 
-        //Opret kunde - kald CreateReservation(chosenShow)
+
+    }
+
+    else if (choice == "2")
+    {
+        //Søg efter show i en bestemt by
+        Console.WriteLine("Indtast bynavn");
+        string cityInput = Console.ReadLine();
+        List<Show> shows = showRepository.GetByCity(cityInput);
+
+        if (shows.Count == 0)
+        {
+            Console.WriteLine($"Ingen forestillinger fundet i {cityInput}.");
+        }
         else
         {
-            CreateReservation(chosenShow);
+            foreach (Show show in shows)
+            {
+                Console.WriteLine($"\n{show.ShowName} kommer til {show.City.Name} d. {show.Date}. \n Følgende stjerner optræder:");
+                foreach (Artist artist in show.Artists)
+                {
+                    Console.WriteLine($"{artist.Act}, {artist.FullName}");
+                }
+                Console.WriteLine($"Der er {show.Seats} antal ledige pladser og {show.VipSeats} VIP pladser. Book nu mens der stadig er ledige biletter!");
+            }
         }
-
     }
-
-
-}
-
-else if (choice == "2")
-{
-    //Søg efter show i en bestemt by
-    Console.WriteLine("Indtast bynavn");
-    string cityInput = Console.ReadLine();
-    List<Show> shows = showRepository.GetByCity(cityInput);
-
-    if (shows.Count == 0)
+    else if (choice == "3")
     {
-        Console.WriteLine($"Ingen forestillinger fundet i {cityInput}.");
-    }
-    else
-    {
-        foreach (Show show in shows)
+        Console.WriteLine("Angiv venligst dit medarbejder password:");
+        string employeePassword = Console.ReadLine();
+
+        //Medarbejder loggedIn. Default med ingen fundet medarbejder - eksisterer efter loop
+        Employee loggedIn = null;
+
+        //Gennemgår alle medarbejdere i listen
+        foreach (Employee employee in employeeRepository.GetAll())
         {
-            Console.WriteLine($"\n{show.ShowName} kommer til {show.City.Name} d. {show.Date}. \n Følgende stjerner optræder:");
-            foreach (Artist artist in show.Artists)
+            //Tjekker efter match med password
+            if (employee.Password == employeePassword)
             {
-                Console.WriteLine($"{artist.Act}, {artist.FullName}");
+                //Gemmer medarbejder i loggedIn
+                loggedIn = employee;
+                //Stop loop
+                break;
             }
-            Console.WriteLine($"Der er {show.Seats} antal ledige pladser og {show.VipSeats} VIP pladser. Book nu mens der stadig er ledige biletter!");
         }
-    }
-}
-else if (choice == "3")
-{
-    Console.WriteLine("Angiv venligst dit medarbejder password:");
-    string employeePassword = Console.ReadLine();
 
-    //Medarbejder loggedIn. Default med ingen fundet medarbejder - eksisterer efter loop
-    Employee loggedIn = null;
-
-    //Gennemgår alle medarbejdere i listen
-    foreach (Employee employee in employeeRepository.GetAll())
-    {
-        //Tjekker efter match med password
-        if (employee.Password == employeePassword)
+        //Hvis loggedIn ikke er null (Medarbejder fundet)
+        if (loggedIn != null)
         {
-            //Gemmer medarbejder i loggedIn
-            loggedIn = employee;
-            //Stop loop
-            break;
+            //Sender medarbejder til "Profil"
+            Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
+            Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
+
+            //While loop for at holde konsol kørende
+            bool employeeActive = true;
+            while (employeeActive)
+            {
+                Console.WriteLine("\n----- Menu -----\n Vælg handling ved at angive nr. \n");
+                Console.WriteLine("1 - Vis liste over forestillinger");
+                Console.WriteLine("2 - Vis liste over kunder");
+                Console.WriteLine("3 - Vis liste over artister");
+                Console.WriteLine("4 - Vis liste over reservationer");
+                Console.WriteLine("5 - Vis liste over nyheder");
+
+                Console.WriteLine("0 - Log ud");
+
+                string employeeChoice = Console.ReadLine();
+
+                if (employeeChoice == "1")
+                {
+                    DisplayShows();
+                    Console.WriteLine("Vil du oprette et nyt show?");
+
+                }
+                else if (employeeChoice == "2")
+                {
+                    DisplayCustomers();
+                    Console.WriteLine("1 - Ønsker du at ændre oplysninger på en kunde?");
+                    Console.WriteLine("0 - Gå tilbage til Menu");
+                    string employeeEditCustomer = Console.ReadLine();
+                    if (employeeEditCustomer == "1")
+                    {
+                        UpdateCustomer();
+                    }
+                    else if (employeeEditCustomer == "0")
+                    {
+                        //Returnerer til employeeActive
+                    }
+                }
+                else if (employeeChoice == "3")
+                {
+                    DisplayArtists();
+                    Console.WriteLine("1 - Ønsker du at ændre oplysninger på en Artist?");
+                    Console.WriteLine("0 - Gå tilbage til Menu");
+                    string employeeEditArtist = Console.ReadLine();
+                    if (employeeEditArtist == "1")
+                    {
+                        UpdateArtist();
+                    }
+                    else if (employeeEditArtist == "0")
+                    {
+                        //Returnerer til employeeActive
+                    }
+                }
+                else if (employeeChoice == "4")
+                {
+                    DisplayReservation();
+                    Console.WriteLine("1 - Vil du oprette en reservation til et bestemt show?");
+                    Console.WriteLine("2 - Vil du ændre en eksisterende reservation?");
+
+                    string employeeEditReservation = Console.ReadLine();
+                    if (employeeEditReservation == "2")
+                    {
+                        UpdateReservation();
+                    }
+
+                }
+                else if (employeeChoice == "5")
+                {
+                    DisplayNews();
+                }
+
+                else if (employeeChoice == "0")
+                {
+                    employeeActive = false;
+                }
+            }
         }
     }
 
-    //Hvis loggedIn ikke er null (Medarbejder fundet)
-    if (loggedIn != null)
-    {
-        //Sender medarbejder til "Profil"
-        Console.WriteLine($"Velkommen til din profil {loggedIn.FullName}.");
-        Console.WriteLine($"Din information:\n{loggedIn.Role}\n{loggedIn.Email}\n");
 
-        //While loop for at holde konsol kørende
-        bool employeeActive = true;
-        while (employeeActive)
-        {
-            Console.WriteLine("\n----- Menu -----\n Vælg handling ved at angive nr. \n");
-            Console.WriteLine("1 - Vis liste over forestillinger");
-            Console.WriteLine("2 - Vis liste over kunder");
-            Console.WriteLine("3 - Vis liste over artister");
-            Console.WriteLine("4 - Vis liste over reservationer");
-            Console.WriteLine("5 - Vis liste over nyheder");
-
-            Console.WriteLine("0 - Log ud");
-
-            string employeeChoice = Console.ReadLine();
-
-            if (employeeChoice == "1")
-            {
-                DisplayShows();
-                Console.WriteLine("Vil du oprette et nyt show?");
-
-            }
-            else if (employeeChoice == "2")
-            {
-                DisplayCustomers();
-                Console.WriteLine("1 - Ønsker du at ændre oplysninger på en kunde?");
-                Console.WriteLine("0 - Gå tilbage til Menu");
-                string employeeEditCustomer = Console.ReadLine();
-                if (employeeEditCustomer == "1")
-                {
-                    UpdateCustomer();
-                }
-                else if (employeeEditCustomer == "0")
-                {
-                    //Returnerer til employeeActive
-                }
-            }
-            else if (employeeChoice == "3")
-            {
-                DisplayArtists();
-                Console.WriteLine("1 - Ønsker du at ændre oplysninger på en Artist?");
-                Console.WriteLine("0 - Gå tilbage til Menu");
-                string employeeEditArtist = Console.ReadLine();
-                if (employeeEditArtist == "1")
-                {
-                    UpdateArtist();
-                }
-                else if (employeeEditArtist == "0")
-                {
-                    //Returnerer til employeeActive
-                }
-            }
-            else if (employeeChoice == "4")
-            {
-                DisplayReservation();
-                Console.WriteLine("1 - Vil du oprette en reservation til et bestemt show?");
-                Console.WriteLine("2 - Vil du ændre en eksisterende reservation?");
-
-                string employeeEditReservation = Console.ReadLine();
-                if (employeeEditReservation == "1")
-                {
-                    UpdateReservation();
-                }
-
-            }
-            else if (employeeChoice == "5")
-            {
-                DisplayNews();
-            }
-
-            else if (employeeChoice == "0")
-            {
-                employeeActive = false;
-            }
-        }
-    }
-}
 
 //Funktioner 
 // -------------------- Display() funktioner ----------------------------
@@ -326,7 +330,8 @@ void CreateReservation(Show chosenShow)
         Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
         Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
         Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
-
+        //Tilføj reservationen til listen!
+        reservationRepository.Add(newReservation);
     }
     else
     {
@@ -522,4 +527,9 @@ void UpdateReservation()
 
 
 
-// -------------------- Delete() funktioner ----------------------------
+    // -------------------- Delete() funktioner ----------------------------
+
+
+
+
+} //Ende af While (true)

@@ -9,19 +9,27 @@ namespace CirkusLuna.ClassLibrary.Repository
     {
         private List<Reservation> _reservations = new List<Reservation>();
 
-        public ReservationRepository()
+        //Sender repositories ind som parametre, så der kan hentes Show og Customer data
+        public ReservationRepository(IShowRepository showRepository, ICustomerRepository customerRepository)
         {
+            //Hent shows
+            Show show1 = showRepository.GetById(1);
+            Show show2 = showRepository.GetById(2);
+            Show show3 = showRepository.GetById(3);
+            Show show4 = showRepository.GetById(4);
+            Show show5 = showRepository.GetById(5);
 
+            //Hent customers
+            Customer customer1 = customerRepository.GetById(1);
+            Customer customer2 = customerRepository.GetById(2);
+            Customer customer3 = customerRepository.GetById(3);
+            Customer customer4 = customerRepository.GetById(4);
+            Customer customer5 = customerRepository.GetById(5);
 
-
-            City copenhagen = new City(1, "København");
-            Show show1 = new Show(1, "Cirkus Luna", new DateOnly(2026, 7, 12), 150, 10, copenhagen);
-            Customer customer1 = new Customer(1, "Gunner TEEEST", "Gunnersen", "gun@mail.com", "56345678", false);
-
-            Reservation reservation1 = new Reservation(1, new DateTime(2026, 7, 12, 3, 0, 0), TicketType.Standard, 2, 5, customer1, show1);
-
+            //Opret reservationer
+            Reservation reservation1 = new Reservation(1, new DateTime(2026, 7, 12, 3, 0, 0), TicketType.Standard, 5, 5, customer1, show1);
+            
             _reservations.Add(reservation1);
-
         }
         public List<Reservation> GetAll()
         {
@@ -43,7 +51,6 @@ namespace CirkusLuna.ClassLibrary.Repository
         public void Add(Reservation reservation)
         {
             _reservations.Add(reservation);
-
         }
         public void Update(Reservation reservation)
         {
