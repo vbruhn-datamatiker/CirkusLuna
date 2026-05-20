@@ -12,24 +12,15 @@ namespace CirkusLuna.ClassLibrary.Repository
         public ReservationRepository()
         {
 
-            //data creation testing
+
 
             City copenhagen = new City(1, "København");
-
             Show show1 = new Show(1, "Cirkus Luna", new DateOnly(2026, 7, 12), 150, 10, copenhagen);
-
             Customer customer1 = new Customer(1, "Gunner TEEEST", "Gunnersen", "gun@mail.com", "56345678", false);
 
+            Reservation reservation1 = new Reservation(1, new DateTime(2026, 7, 12, 3, 0, 0), TicketType.Standard, 2, 5, customer1, show1);
 
-            //Reservation reservation1 =
-            //DateTime( year  month day hour min sec
-            // new Reservation(1, new DateTime (2026, 7, 12, 3, 0),
-            //TicketType.Standard, 2, 5, customer1, show1);
-
-
-            //_reservations.Add(reservation1); 
-
-            //------//
+            _reservations.Add(reservation1);
 
         }
         public List<Reservation> GetAll()

@@ -171,7 +171,15 @@ else if (choice == "3")
             else if (employeeChoice == "4")
             {
                 DisplayReservation();
-                Console.WriteLine("Vil du oprette en reservation til et bestemt show?");
+                Console.WriteLine("1 - Vil du oprette en reservation til et bestemt show?");
+                Console.WriteLine("2 - Vil du ændre en eksisterende reservation?");
+
+                string employeeEditReservation = Console.ReadLine();
+                if (employeeEditReservation == "1")
+                {
+                    UpdateReservation();
+                }
+
             }
             else if (employeeChoice == "5")
             {
@@ -217,7 +225,7 @@ void DisplayReservation()
 {
     foreach (Reservation reservation in reservationRepository.GetAll())
     {
-        Console.WriteLine($"");
+        Console.WriteLine($"Reservation [{reservation.ReservationId} - {reservation.Customer.FullName} - {reservation.TotalSeats}]");
     }
 }
 
@@ -431,5 +439,87 @@ void UpdateArtist()
 
     }
 }
+
+void UpdateReservation()
+{
+    //Finder eksisterende Artist på ID
+    Console.WriteLine("Skriv ID på den reservation der skal ændres: ");
+    int existingReservationId = int.Parse(Console.ReadLine());
+    Reservation reservation = reservationRepository.GetById(existingReservationId);
+
+    //Holder update() kørende
+    bool updateReservation = true;
+    while (updateReservation == true)
+    {
+        //Oversigt over mulige handlinger
+        Console.WriteLine("\n----- Update Menu -----\n Vælg handling ved at angive nr. \n");
+        Console.WriteLine("1 - Ændre kundeoplysninger (Email og tlf.)");
+        Console.WriteLine("2 - Ændre antal billetter: ");
+        Console.WriteLine("3 - Ændre billettype (Standard/VIP): ");
+        //Console.WriteLine("4 - Ændre til et andet show"); - Gemmer den her, hvis vi ønsker at implementere den
+
+        Console.WriteLine("0 - Afslut ændringer");
+
+        int updateReservationChoice = int.Parse(Console.ReadLine());
+
+        if (updateReservationChoice == 1)
+        {
+            Console.WriteLine("Indtast ny email: ");
+            reservation.Customer.Email = Console.ReadLine();
+            Console.WriteLine("Indtast nyt tlf nummer: ");
+            reservation.Customer.PhoneNumber = Console.ReadLine();
+            customerRepository.Update(reservation.Customer);
+            reservationRepository.Update(reservation);
+        }
+        else if (updateReservationChoice == 2)
+        {
+            
+            Console.WriteLine("Indtast ønsket antal billetter: ");
+            int newTicketAmount = int.Parse(Console.ReadLine());
+
+            //Logik til at tjekke tilgængelighed af ønsket antal sæder gennem service
+            //Tæl eksisterende bookede billetter/sæder for det specifikke show - ekskluderer denne reservation
+            int bookedSeats = 0;
+            foreach (Reservation r in reservationRepository.GetByShow(reservation.Show.Id))
+            {
+                if (r.ReservationId != reservation.ReservationId)
+                {
+                    bookedSeats += r.TotalSeats;
+                }
+            }
+            //Tjekker om reservation er VIP eller standard og vælger den korrekte type.
+            int availableSeats = 0;
+            if (reservation.TicketType == TicketType.VIP)
+            {
+                availableSeats = reservation.Show.VipSeats;
+            } 
+            else
+            {
+                availableSeats = reservation.Show.Seats;
+            }
+
+            if (bookedSeats + newTicketAmount <= availableSeats)
+            {
+                reservation.TotalSeats = newTicketAmount;
+                reservationRepository.Update(reservation);
+                Console.WriteLine($"Billetter opdateret. Du har nu {reservation.TotalSeats} billetter.");
+            }
+            else
+            {
+                Console.WriteLine("Der er ikke nok ledige billetter.");
+            }
+
+
+        }
+
+        else if (updateReservationChoice == 0)
+        {
+            updateReservation = false;
+        }
+
+    }
+}
+
+
 
 // -------------------- Delete() funktioner ----------------------------
