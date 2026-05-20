@@ -179,12 +179,19 @@ while (true)
                 {
                     DisplayArtists();
                     Console.WriteLine("1 - Ønsker du at ændre oplysninger på en Artist?");
-                    Console.WriteLine("0 - Gå tilbage til Menu");
+                    Console.WriteLine("2 - Ønsker du at oprette en ny Artist?");
+
+                    Console.WriteLine("\n0 - Gå tilbage til Menu");
                     string employeeEditArtist = Console.ReadLine();
                     if (employeeEditArtist == "1")
                     {
                         UpdateArtist();
                     }
+                    else if (employeeEditArtist == "2")
+                    {
+                        CreateArtist();
+                    }
+
                     else if (employeeEditArtist == "0")
                     {
                         //Returnerer til employeeActive
@@ -385,6 +392,29 @@ void CreateReservation(Show chosenShow)
         Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
     }
 }
+
+void CreateArtist()
+    {
+        Console.WriteLine("Indtast navn på ny artist: ");
+        string firstName = Console.ReadLine();
+        Console.WriteLine("Indtast efternavn på ny artist: ");
+        string lastName = Console.ReadLine();
+        Console.WriteLine("Indtast email på ny artist: ");
+        string email = Console.ReadLine();
+        Console.WriteLine("Indtast Act på ny artist: ");
+        string act = Console.ReadLine();
+
+        int artistId = artistRepository.GetAll().Count + 1;
+       //Opret og tilføj ny artist til artistRepo
+        Artist newArtist = new Artist(artistId, firstName, lastName, email, act);
+        artistRepository.Add(newArtist);
+        Console.WriteLine($"Artist nr: [{artistId}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
+    }
+
+//void CreateShow();
+//    {
+
+//    }
 
 // -------------------- Update() funktioner ----------------------------
 
