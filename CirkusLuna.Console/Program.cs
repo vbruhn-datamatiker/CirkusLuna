@@ -147,7 +147,7 @@ while (true)
 
                     if (employeeEditShow == "1")
                     {
-                        //CreateShow();
+                        CreateShow();
                     } 
                     else if (employeeEditShow == "2")
                     {
@@ -411,10 +411,32 @@ void CreateArtist()
         Console.WriteLine($"Artist nr: [{artistId}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
     }
 
-//void CreateShow();
-//    {
-
-//    }
+void CreateShow()
+    {
+        Console.WriteLine("Indtast titel på nyt show: ");
+        string showName = Console.ReadLine();
+        Console.WriteLine("Angiv dato for show i YYYY-MM-DD format:");
+        string showDateInput = Console.ReadLine();
+        DateOnly newDate = DateOnly.Parse(showDateInput);
+        Console.WriteLine("Angiv hvor mange standard pladser showet skal have: ");
+        int showStandardTickets = int.Parse(Console.ReadLine());
+        Console.WriteLine("Angiv hvor mange VIP pladser showet skal have: ");
+        int showVipTickets = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Angiv by hvor showet skal finde sted: ");
+        string showCity = Console.ReadLine();
+        //Opret ny city objekt
+        int newCityId = showRepository.GetAll().Count + 1;
+        City newCity = new City(newCityId, showCity );
+        
+        //Opret nyt show objekt
+        int newShowId = showRepository.GetAll().Count + 1;
+        Show newShow = new Show(newShowId, showName, newDate, showStandardTickets, showVipTickets, newCity);
+        
+ 
+        showRepository.Add(newShow);
+        Console.WriteLine($"{newShow.ShowName} er oprettet og afholdes d. {newShow.Date}. Der er {showStandardTickets} standard pladser og {showVipTickets} VIP pladser." +
+            $"\n Forestillingen finder sted i {newShow.City.Name}");
+    }
 
 // -------------------- Update() funktioner ----------------------------
 
