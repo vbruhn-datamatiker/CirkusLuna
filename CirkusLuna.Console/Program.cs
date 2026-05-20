@@ -156,6 +156,17 @@ else if (choice == "3")
             else if (employeeChoice == "3")
             {
                 DisplayArtists();
+                Console.WriteLine("1 - Ønsker du at ændre oplysninger på en Artist?");
+                Console.WriteLine("0 - Gå tilbage til Menu");
+                string employeeEditArtist = Console.ReadLine();
+                if (employeeEditArtist == "1")
+                {
+                    UpdateArtist();
+                }
+                else if (employeeEditArtist == "0")
+                {
+                    //Returnerer til employeeActive
+                }
             }
             else if (employeeChoice == "4")
             {
@@ -334,7 +345,7 @@ void UpdateCustomer()
         Console.WriteLine("1 - Ændre Fornavn + Efternavn");
         Console.WriteLine("2 - Ændre Email");
         Console.WriteLine("3 - Ændre telefon nr.");
-        Console.WriteLine("4 - Ændre kundestatus: Standard / VIP\n");
+        //Console.WriteLine("4 - Ændre kundestatus: Standard / VIP\n"); - Lige udkommenteret, den skal ikke være tilgængelig for customer
 
         Console.WriteLine("0 - Afslut ændringer");
 
@@ -349,11 +360,73 @@ void UpdateCustomer()
             //Opdater ændringer
             customerRepository.Update(customer);
 
-        } 
-        
+        }
+        else if (updateCustomerChoice == 2)
+        {
+            Console.WriteLine("Indtast ny email:");
+            customer.Email = Console.ReadLine();
+            customerRepository.Update(customer);
+        }
+        else if (updateCustomerChoice == 3)
+        {
+            Console.WriteLine("Indtast nyt telefon nr.:");
+            customer.PhoneNumber = Console.ReadLine();
+            customerRepository.Update(customer);
+        }
         else if (updateCustomerChoice == 0)
         {
             updateCustomer = false;
+        }
+
+    }
+}
+
+void UpdateArtist()
+{
+    //Finder eksisterende Artist på ID
+    Console.WriteLine("Skriv ID på artist der skal ændres: ");
+    int existingArtistId = int.Parse(Console.ReadLine());
+    Artist artist = artistRepository.GetById(existingArtistId);
+
+    //Holder update() kørende
+    bool updateArtist = true;
+    while (updateArtist == true)
+    {
+        //Oversigt over mulige handlinger
+        Console.WriteLine("\n----- Update Menu -----\n Vælg handling ved at angive nr. \n");
+        Console.WriteLine("1 - Ændre Fornavn + Efternavn");
+        Console.WriteLine("2 - Ændre Email");
+        Console.WriteLine("3 - Ændre artist Act\n");
+        
+        Console.WriteLine("0 - Afslut ændringer");
+
+        int updateArtistChoice = int.Parse(Console.ReadLine());
+
+        if (updateArtistChoice == 1)
+        {
+            Console.WriteLine("Indtast nyt fornavn:");
+            artist.FirstName = Console.ReadLine();
+            Console.WriteLine("Indtast nyt efternavn:");
+            artist.LastName = Console.ReadLine();
+            //Opdater ændringer
+            artistRepository.Update(artist);
+
+        }
+        else if (updateArtistChoice == 2)
+        {
+            Console.WriteLine("Indtast ny email:");
+            artist.Email = Console.ReadLine();
+            artistRepository.Update(artist);
+        }
+        else if (updateArtistChoice == 3)
+        {
+            Console.WriteLine("Indtast ny Act:");
+            artist.Act = Console.ReadLine();
+            artistRepository.Update(artist);
+        }
+        else if (updateArtistChoice == 0)
+        {
+            updateArtist = false;
         }
 
     }
