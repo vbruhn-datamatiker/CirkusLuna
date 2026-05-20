@@ -57,81 +57,7 @@ if (choice == "1")
         //Opret kunde
         else
         {
-            Console.WriteLine("Indtast dit navn: ");
-            string firstName = Console.ReadLine();
-
-            Console.WriteLine("Indtast dit efternavn: ");
-            string lastName = Console.ReadLine();
-
-            Console.WriteLine("Indtast din email: ");
-            string email = Console.ReadLine();
-
-            Console.WriteLine("Indtast dit telefonnummer: ");
-            string phoneNumber = Console.ReadLine();
-
-            //Generer nyt CustomerID
-            int customerId = customerRepository.GetAll().Count + 1;
-            Customer newCustomer = new Customer(customerId, firstName, lastName, email, phoneNumber, false);
-
-            customerRepository.Add(newCustomer);
-
-            //Vælg billettype
-            Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
-            string ticketChoice = Console.ReadLine();
-            TicketType ticketType;
-
-            //Simpel if statement til at afgøre billettype
-            if (ticketChoice == "2")
-            {
-                ticketType = TicketType.VIP;
-            }
-
-            else
-            {
-                ticketType = TicketType.Standard;
-            }
-
-            //Vælg antal biletter
-            Console.WriteLine("Hvor mange billetter ønsker du?:  ");
-            int ticketAmount = int.Parse(Console.ReadLine());
-
-            //Auto-tildeler kunde et sæde, baseret på nuværende bookings for samme show
-            List<Reservation> extistingReservations =
-            reservationService.GetByShow(chosenShow.Id);
-            int nextSeatNumber = 1;
-            foreach (Reservation r in extistingReservations)
-            {
-                nextSeatNumber += r.TotalSeats;
-            }
-
-            //Opret Reservation
-            int reservationId = reservationRepository.GetAll().Count + 1;
-            Reservation newReservation = new Reservation(
-                reservationId,
-                new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
-                ticketType,
-                ticketAmount,
-                nextSeatNumber,
-                newCustomer,
-                chosenShow
-                );
-
-            //Tjek fra servicelag at reservationen kan foretages
-            bool success = reservationService.CreateReservation(newReservation);
-
-            if (success)
-            {
-                Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
-                Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
-                Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
-                Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
-
-            }
-            else
-            {
-                Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
-            }
-
+            CreateReservation(chosenShow);
         }
 
     }
@@ -290,5 +216,84 @@ void DisplayNews()
     foreach (NewsPost post in newsPostRepository.GetAll())
     {
         Console.WriteLine($"[{post.NewsPostId}] | {post.Title} | {post.Content} - Udgivet d. {post.PublishedDateTime}");
+    }
+}
+
+//Funktion til at oprette re4servation ud fra chosenShow
+void CreateReservation(Show chosenShow)
+{
+    Console.WriteLine("Indtast navn: ");
+    string firstName = Console.ReadLine();
+
+    Console.WriteLine("Indtast efternavn: ");
+    string lastName = Console.ReadLine();
+
+    Console.WriteLine("Indtast email: ");
+    string email = Console.ReadLine();
+
+    Console.WriteLine("Indtast telefonnummer: ");
+    string phoneNumber = Console.ReadLine();
+
+    //Generer nyt CustomerID
+    int customerId = customerRepository.GetAll().Count + 1;
+    Customer newCustomer = new Customer(customerId, firstName, lastName, email, phoneNumber, false);
+
+    customerRepository.Add(newCustomer);
+
+    //Vælg billettype
+    Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
+    string ticketChoice = Console.ReadLine();
+    TicketType ticketType;
+
+    //Simpel if statement til at afgøre billettype
+    if (ticketChoice == "2")
+    {
+        ticketType = TicketType.VIP;
+    }
+
+    else
+    {
+        ticketType = TicketType.Standard;
+    }
+
+    //Vælg antal biletter
+    Console.WriteLine("Hvor mange billetter ønsker du?:  ");
+    int ticketAmount = int.Parse(Console.ReadLine());
+
+    //Auto-tildeler kunde et sæde, baseret på nuværende bookings for samme show
+    List<Reservation> extistingReservations =
+    reservationService.GetByShow(chosenShow.Id);
+    int nextSeatNumber = 1;
+    foreach (Reservation r in extistingReservations)
+    {
+        nextSeatNumber += r.TotalSeats;
+    }
+
+    //Opret Reservation
+    int reservationId = reservationRepository.GetAll().Count + 1;
+    Reservation newReservation = new Reservation(
+        reservationId,
+        new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
+        ticketType,
+        ticketAmount,
+        nextSeatNumber,
+        newCustomer,
+        chosenShow
+        );
+
+    //Tjek fra servicelag at reservationen kan foretages
+    bool success = reservationService.CreateReservation(newReservation);
+
+    if (success)
+    {
+        Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
+        Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
+        Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
+        Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
+
+    }
+    else
+    {
+        Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
     }
 }
