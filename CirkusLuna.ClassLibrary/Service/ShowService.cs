@@ -29,7 +29,7 @@ namespace CirkusLuna.ClassLibrary.Service
 
             for (int i = 0; i < shows.Count; i++)
             {
-                if (shows[i].City.Name == cityName)
+                if (shows[i].City.Name.ToLower() == cityName.ToLower())
                 {
                     result.Add(shows[i]);
                 }

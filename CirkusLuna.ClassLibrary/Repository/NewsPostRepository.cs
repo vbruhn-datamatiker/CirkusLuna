@@ -49,7 +49,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             List<NewsPost> result = new List<NewsPost>();
             for (int i = 0; i < _newsposts.Count; i++)
             {
-                if (_newsposts[i].Title.Contains(title))
+                if (_newsposts[i].Title.ToLower().Contains(title.ToLower()))
                 {
                     result.Add(_newsposts[i]);
                 }
