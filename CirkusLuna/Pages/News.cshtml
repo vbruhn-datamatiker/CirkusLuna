@@ -1,0 +1,48 @@
+﻿@page
+@model CirkusLuna.Pages.NewsModel
+@using CirkusLuna.ClassLibrary.Model
+@{
+}
+
+<div class="container mt-4">
+
+    <h1>Nyheder</h1>
+
+    @* the search form *@
+
+    <form method="get">
+
+        <div class="input-group mb-3">
+
+            <input type="text" class="form-control"
+                   name="SearchTitle"
+                   placeholder="Søg efter nyhedsopslag..."
+                   value="@Model.SearchTitle" />
+            <button class="btn btn-primary" type="submit">Søg</button>
+
+        </div>
+    </form>
+
+    @foreach (NewsPost newsPost in Model.NewsPosts)
+    {
+        //show news
+        <div class="card mb-3">
+
+            <div class="card-header">
+
+                <h5>@newsPost.Title</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p><strong>Indhold: </strong> @newsPost.Content</p>
+                <p><strong>Udgivelsesdato: </strong> @newsPost.PublishedDateTime.ToString("dd-MM-yyyy")</p>
+
+                               
+            </div>
+
+        </div>
+    }
+
+</div>
