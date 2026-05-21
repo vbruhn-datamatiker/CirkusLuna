@@ -7,6 +7,7 @@ namespace CirkusLuna.ClassLibrary.Model
     public class Reservation
     {
         //Reservation properties
+
         public int ReservationId { get; set; }
         public DateTime ReservationTime { get; set; }
         public TicketType TicketType { get; set; }

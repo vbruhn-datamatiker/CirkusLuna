@@ -3,3 +3,71 @@
 @using CirkusLuna.ClassLibrary.Model
 @{
 }
+
+<div class="container mt-4">
+    <h1>Reserver billetter</h1>
+
+    @* success /fail message *@
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+
+    {
+        <div class="alert alert-info">@Model.Message</div>
+        
+    }
+
+    <form method="post">
+
+        @* show dropdown *@
+        <div class="mb-3">
+
+            <label>Vælg forestilling</label>
+            <select class="form-control" name="ShowId">
+                @foreach (Show show in Model.Shows)
+                {
+                    <option value="@show.Id">@show.ShowName - @show.City.Name - @show.Date</option>
+                }
+            </select>
+        </div>
+
+        @* customer details *@
+        <div class="mb-3">
+            <label>Fornavn</label>
+            <input type="text" class="form-control" name="FirstName" value="@Model.FirstName" />
+        </div>
+
+        <div class="mb-3">
+            <label>Efternavn</label>
+            <input type="text" class="form-control" name="LastName" value="@Model.LastName" />
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" class="form-control" name="Email" value="@Model.Email" />
+        </div>
+
+        <div class="mb-3">
+            <label>Telefonnummer</label>
+            <input type="text" class="form-control" name="PhoneNumber" value="@Model.PhoneNumber" />
+        </div>
+
+        @* tikcet type *@
+
+        <div class="mb-3">
+            <label>Billettype</label>
+            <select class="form-control" name="TicketType">
+                <option value="0">Standard</option>
+                <option value="1">Child</option>
+                <option value="2">VIP</option>
+            </select>
+        </div>
+
+        @* number of ticktes *@
+        <div class="mb-3">
+            <label>Antal billetter</label>
+            <input type="number" class="form-control" name="TotalSeats" min="1" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Reserver</button>
+    </form>
+</div>

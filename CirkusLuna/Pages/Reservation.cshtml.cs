@@ -16,13 +16,21 @@ namespace CirkusLuna.Pages
         public List<Show> Shows { get; set; } = new List<Show>();
 
         //Form fields
+        [BindProperty]
         public string FirstName { get; set; } = string.Empty;
+        [BindProperty]
         public string LastName { get; set; } = string.Empty;
+        [BindProperty]
         public string Email { get; set; } = string.Empty;
+        [BindProperty]
         public string PhoneNumber { get; set; } = string.Empty;
+        [BindProperty]
         public int ShowId { get; set; }
+        [BindProperty]
         public int TotalSeats { get; set; }
+        [BindProperty]
         public TicketType TicketType { get; set; }
+        public bool FormSubmitted { get; set; } = false;
 
         //feedback message
         public string Message { get; set; } = string.Empty;
@@ -45,6 +53,7 @@ namespace CirkusLuna.Pages
 
         public void OnPost()
         {
+            FormSubmitted = true;
             Shows = _showRepository.GetAll();
 
             //Get selected show
