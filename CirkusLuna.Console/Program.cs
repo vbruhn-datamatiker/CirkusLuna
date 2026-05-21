@@ -15,8 +15,6 @@ INewsPostRepository newsPostRepository = new NewsPostRepository();
 //Console App Program
 while (true)
 {
-
-
     //Indledning
     Console.BackgroundColor = ConsoleColor.Blue;
     Console.WriteLine("--------------------- Velkommen til Cirkus Luna ---------------------\n");
@@ -202,6 +200,7 @@ while (true)
                     DisplayReservation();
                     Console.WriteLine("1 - Vil du oprette en reservation til et bestemt show?");
                     Console.WriteLine("2 - Vil du ændre en eksisterende reservation?");
+                    Console.WriteLine("3 - Vil du slette en eksisterende reservation?");
 
                     Console.WriteLine("\n0 - Gå tilbage til Menu");
                     string employeeEditReservation = Console.ReadLine();
@@ -212,9 +211,13 @@ while (true)
                         Show chosenShow = showRepository.GetById(employeeCreateReservation);
                         CreateReservation(chosenShow);
                     }
-                    else if (employeeEditReservation == "2") 
+                    else if (employeeEditReservation == "2")
                     {
                         UpdateReservation();
+                    }
+                    else if (employeeChoice == "3")
+                    {
+                        DeleteReservation();
                     }
 
                 }
@@ -705,7 +708,16 @@ void UpdateShow()
 
     // -------------------- Delete() funktioner ----------------------------
 
-
+void DeleteReservation()
+    {
+        Console.WriteLine("Angiv ID på den reservation du ønsker at slette: ");
+        int reservationId = int.Parse(Console.ReadLine());
+        //Find reservation i repository
+        Reservation reservation = reservationRepository.GetById(reservationId);
+        //Slet
+        reservationRepository.Delete(reservationId);
+        Console.WriteLine("Reservationen er slettet.");
+    }
 
 
 } //Ende af While (true)
