@@ -12,6 +12,7 @@ namespace CirkusLuna.ClassLibrary.Repository
         {
             if (File.Exists(_path))
             {
+                //Sti til JSON fil - gemmers i programmets output mappe
                 string json = File.ReadAllText(_path);
                 _artistList = JsonSerializer.Deserialize<List<Artist>>(json) ?? new List<Artist>();
             }
@@ -30,17 +31,20 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
         }
 
+        //Gemmer data til filen
         private void SaveToFile()
         {
             string json = JsonSerializer.Serialize(_artistList, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_path, json);
         }
 
+        //Returnerer alle artister
         public List<Artist> GetAll()
         {
             return _artistList;
         }
 
+        //Finder og returnerer artist på ID - returnerer null hvis der ikke findes nogen artist
         public Artist GetById(int id)
         {
             for (int i = 0; i < _artistList.Count; i++)
@@ -51,12 +55,14 @@ namespace CirkusLuna.ClassLibrary.Repository
             return null;
         }
 
+        //Tilføjer ny artist og gemmer til fil
         public void Add(Artist artist)
         {
             _artistList.Add(artist);
             SaveToFile();
         }
 
+        //Opdaterer eksisterende artister og gemmer til fil
         public void Update(Artist artist)
         {
             for (int i = 0; i < _artistList.Count; i++)
@@ -73,6 +79,7 @@ namespace CirkusLuna.ClassLibrary.Repository
             SaveToFile();
         }
 
+        //Sletter artist på ID og gemmer til fil
         public void Delete(int id)
         {
             _artistList.Remove(GetById(id));
