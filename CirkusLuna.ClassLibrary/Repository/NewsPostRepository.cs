@@ -12,17 +12,7 @@ namespace CirkusLuna.ClassLibrary.Repository
         //NewsPost Constructor
         public NewsPostRepository()
         {
-            //Oprettelse af NewsPosts
-            NewsPost post1 = new NewsPost(1, "Ny Elefant!", "Vi har fået en ny elefant....", new DateTime(2026, 5, 1));
-            NewsPost post2 = new NewsPost(2, "10 års Jubilæum", "Benny Blæk har 10 års jubilæum, det fejrer vi med...", new DateTime(2026, 6, 1));
-            NewsPost post3 = new NewsPost(3, "Sæsonen 3 starter!", "Vi er klar til en ny sæson...", new DateTime(2026, 7, 1));
-            NewsPost post4 = new NewsPost(4, "Ny Stjerne!", "Kom og oplev vores nyeste artist...", new DateTime(2026, 8, 1));
-
-            _newsposts.Add(post1);
-            _newsposts.Add(post2);
-            _newsposts.Add(post3);
-            _newsposts.Add(post4);
-
+            //Tom constructor, når nu data håndteres i NewsPostJSONRepository
         }
 
         public List<NewsPost> GetAll()
@@ -57,7 +47,6 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
             return result;
         }
-
 
         public List<NewsPost> GetByPublishedDate(DateTime dateTime)
         {

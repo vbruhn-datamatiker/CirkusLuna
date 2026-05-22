@@ -6,7 +6,7 @@ using CirkusLuna.ClassLibrary.Service;
 IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowRepository(artistRepository);
 IEmployeeRepository employeeRepository = new EmployeeRepository();
-ICustomerRepository customerRepository = new CustomerRepository();
+ICustomerRepository customerRepository = new CustomerJSONRepository();
 IShowService showService = new ShowService(showRepository);
 IReservationRepository reservationRepository = new ReservationJSONRepository();
 IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
@@ -24,7 +24,9 @@ while (true)
 
     Console.WriteLine("Se alle fremtidige forestillinger - Tast 1");
     Console.WriteLine("Søg efter den næste forestilling i en by - Tast 2");
-    Console.WriteLine("\nLog ind som medarbejder - Tast 3\n");
+    Console.WriteLine("Se de seneste nyheder! - tast 3");
+
+    Console.WriteLine("\nLog ind som medarbejder - Tast 5\n");
 
     //Søg efter forestillinger
     string choice = Console.ReadLine();
@@ -90,6 +92,12 @@ while (true)
         }
     }
     else if (choice == "3")
+    {
+        DisplayNews();
+    }
+
+    //Medarbejder "LogIn"
+    else if (choice == "5")
     {
         Console.WriteLine("Angiv venligst dit medarbejder password:");
         string employeePassword = Console.ReadLine();
