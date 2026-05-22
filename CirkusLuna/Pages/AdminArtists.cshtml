@@ -1,0 +1,37 @@
+﻿@page
+@model CirkusLuna.Pages.AdminArtistsModel
+@using CirkusLuna.ClassLibrary.Model
+@using CirkusLuna.ClassLibrary.Repository
+@{
+}
+
+<div class="container mt-4">
+    <h1>Admin | Artister</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fornavn</th>
+                <th>Efternavn</th>
+                <th>Email</th>
+                <th>Act</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Artist artist in Model.Artists)
+            {
+                <tr>
+                    <td>@artist.Id</td>
+                    <td>@artist.FirstName</td>
+                    <td>@artist.LastName</td>
+                    <td>@artist.Email</td>
+                    <td>@artist.Act</td>
+                   
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

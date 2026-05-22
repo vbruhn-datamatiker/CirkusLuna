@@ -1,0 +1,35 @@
+﻿@page
+@model CirkusLuna.Pages.AdminEmployeesModel
+@using CirkusLuna.ClassLibrary.Model
+@using CirkusLuna.ClassLibrary.Repository
+@{
+}
+
+<div class="container mt-4">
+    <h1>Admin | Kollegaer</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fornavn</th>
+                <th>Efternavn</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Employee employee in Model.Employees)
+            {
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

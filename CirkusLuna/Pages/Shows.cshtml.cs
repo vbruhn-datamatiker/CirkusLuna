@@ -29,17 +29,52 @@ namespace CirkusLuna.Pages
         //If i was to use something else than bind property,
         //it would be as as below
         //SearchCity = Request.Query["SearchCity"]
+        [BindProperty(SupportsGet = true)]
+        public string SearchDate { get; set; } = string.Empty;
+
+        [BindProperty(SupportsGet = true)]
+        public bool OnlyAvailable { get; set; } = false;
 
         public void OnGet()
         {
             if (string.IsNullOrEmpty(SearchCity))
             {
+                //all shows
                 Shows = _showService.GetAll();
             }
-            else
+            //filter by city
+            if (!string.IsNullOrEmpty(SearchCity))
             {
                 Shows = _showService.GetByCity(SearchCity);
+            }
 
+            //filter by date
+            if (!string.IsNullOrEmpty(SearchDate))
+            {
+                DateOnly date = DateOnly.Parse(SearchDate);
+                List<Show> dateResult = new List<Show>();
+                foreach (Show show in Shows)
+                {
+                    if (show.Date == date)
+                    {
+                        dateResult.Add(show);
+                    }
+                }
+                Shows = dateResult;
+            }
+
+            //filter by availability
+            if (OnlyAvailable)
+            {
+                List<Show> availableResult = new List<Show>();
+                foreach (Show show in Shows)
+                {
+                    if (show.Seats > 0)
+                    {
+                        availableResult.Add(show);
+                    }
+                }
+                Shows = availableResult;
             }
 
         }

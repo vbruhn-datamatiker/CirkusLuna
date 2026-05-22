@@ -8,20 +8,36 @@
 
     <h1>Forestillinger</h1>
 
-    @* the search form *@
+   
 
     <form method="get">
-
+        @* the search form by city *@
         <div class="input-group mb-3">
             <input type="text" class="form-control"
                    name="SearchCity"
                    placeholder="Søg efter by..."
                    value="@Model.SearchCity" />
             <button class="btn btn-primary" type="submit">Søg</button>
-
         </div>
-    </form>
 
+        <div class="mb-3">
+            <label>Filtrer efter dato</label>
+            <input type="date" class="form-control"
+                   name="SearchDate"
+                   value="@Model.SearchDate" />
+
+                   
+        </div>
+
+        @* availability filter *@
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input"
+                   name="OnlyAvailable"
+                   value="true" />
+            <label class="form-check-label">Vis kun forestillinger med ledige pladser</label>
+        </div>
+        <button class="btn btn-primary mb-3" type="submit">Filtrer</button>
+    </form>
 
     @foreach (Show show in Model.Shows)
     {

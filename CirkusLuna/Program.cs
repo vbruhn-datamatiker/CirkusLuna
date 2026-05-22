@@ -3,6 +3,7 @@ using CirkusLuna.ClassLibrary.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 // Register repositories for dependency injection
+builder.Services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddSingleton<IArtistRepository, ArtistRepository>();
 builder.Services.AddSingleton<IShowRepository, ShowRepository>();
 builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
