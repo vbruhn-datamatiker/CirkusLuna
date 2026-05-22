@@ -233,6 +233,20 @@ while (true)
                 else if (employeeChoice == "5")
                 {
                     DisplayNews();
+                    Console.WriteLine("1 - Vil du oprette en ny Post?: ");
+                    Console.WriteLine("2 - Vil du slette en Post?: ");
+                    
+                    string manageNewsPost = Console.ReadLine();
+                    if (manageNewsPost == "1")
+                    {
+                        CreateNewsPost();
+                    }
+                    else if (manageNewsPost == "2")
+                    {
+                        DeleteNewsPost();
+                    }
+
+
                 }
                 else if (employeeChoice == "6")
                 {
@@ -792,6 +806,18 @@ void DeleteReservation()
         reservationRepository.Delete(reservationId);
         Console.WriteLine("Reservationen er slettet.");
     }
+
+void DeleteNewsPost()
+    {
+        Console.WriteLine("Angiv ID på den news post der skal slettes: ");
+        int newsPostId = int.Parse(Console.ReadLine());
+        //Find post i repository
+        NewsPost newsPost = newsPostRepository.GetById(newsPostId);
+        //Slet
+        newsPostRepository.Delete(newsPostId);
+        Console.WriteLine("Post slettet.");
+    }
+
 
 
 } //Ende af While (true)
