@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(dotnet --list-sdks)",
-      "Bash(find \"/mnt/c/Users/Victoria/source/repos/CirkusLuna/CirkusLuna.ClassLibrary\" -name \"*.cs\" | sort)"
-    ]
-  }
-}
