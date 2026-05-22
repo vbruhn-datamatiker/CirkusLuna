@@ -40,5 +40,32 @@ namespace CirkusLuna.ClassLibrary.Repository
             }
             return null;
         }
+
+        public void Add(Employee employee)
+        {
+            _employeeList.Add(employee);
+        }
+
+        public void Update(Employee employee)
+        {
+            for (int i = 0; i < _employeeList.Count; i++) 
+            {
+                if (_employeeList[i].Id == employee.Id) 
+                { 
+                    _employeeList[i].FirstName = employee.FirstName;
+                    _employeeList[i].LastName = employee.LastName;
+                    _employeeList[i].Email = employee.Email;
+                    _employeeList[i].Password = employee.Password;
+                    _employeeList[i].Role = employee.Role;
+                    break;
+                }
+            }
+        }
+
+        public void Delete(int id)
+        {
+            _employeeList.Remove(GetById(id));
+        }
+
     }
 }
