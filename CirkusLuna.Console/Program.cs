@@ -237,6 +237,19 @@ while (true)
                 else if (employeeChoice == "6")
                 {
                     DisplayEmployees();
+                    Console.WriteLine("1 - Vil du oprette en ny medarbejder?");
+                    Console.WriteLine("2 - Vil du ændre oplysninger på en eksisterende medarbejder?");
+                    string employeeEditEmployee = Console.ReadLine();
+
+                    if (employeeEditEmployee == "1") 
+                    {
+                        CreateEmployee();
+                    }
+                    else if (employeeEditEmployee == "2")
+                    {
+                        //UpdateEmployee();
+                    }
+
                 }
 
                 else if (employeeChoice == "0")
@@ -433,6 +446,46 @@ void CreateArtist()
         Artist newArtist = new Artist(artistId, firstName, lastName, email, act);
         artistRepository.Add(newArtist);
         Console.WriteLine($"Artist nr: [{artistId}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
+    }
+
+void CreateEmployee()
+    {
+        Console.WriteLine("Angiv fornavn på ny medarbejder: ");
+        string firstName = Console.ReadLine();
+        Console.WriteLine("Angiv efternavn på ny medarbejder: ");
+        string lastName = Console.ReadLine();
+        Console.WriteLine("Angiv email på ny medarbejder: ");
+        string email = Console.ReadLine();
+        Console.WriteLine($"Angiv hvilken stilling {firstName} skal have?: ");
+        string role = Console.ReadLine();
+        string password = lastName;
+
+        int newEmployeeId = employeeRepository.GetAll().Count + 1;
+        //Opret og tilføj ny medarbejder
+        Employee newEmployee = new Employee(newEmployeeId, firstName, lastName, email, role, password);
+        employeeRepository.Add(newEmployee);
+
+        Console.WriteLine($"Velkommen til ny {newEmployee.Role} - {newEmployee.FullName}, {newEmployee.Email}.\nMedarbejder password: {newEmployee.Password}");
+    }
+
+void CreateNewsPost()
+    {
+        Console.WriteLine("Angiv titel på post: ");
+        string newsTitle = Console.ReadLine();
+        Console.WriteLine("Skriv postens indhold: ");
+        string newsContent = Console.ReadLine();
+
+        //Sæt automatisk dato og tid til "nu"
+        DateTime publishedDateTime = DateTime.Now;
+
+        int newsPostId = newsPostRepository.GetAll().Count + 1;
+        //Opret og tilføj ny post til NewsPostRepo
+        NewsPost newNewsPost = new NewsPost(newsPostId, newsTitle, newsContent, publishedDateTime);
+        newsPostRepository.Add(newNewsPost);
+
+        Console.WriteLine($"Din post [{newsPostId}] er oprettet d. {publishedDateTime}\n" +
+            $"{newsTitle} - {newsContent}");
+
     }
 
 void CreateShow()
