@@ -3,12 +3,12 @@ using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
 
 //Forbind repositories - ligger uden for while(true) så data bevares.
-IArtistRepository artistRepository = new ArtistRepository();
+IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowRepository(artistRepository);
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 ICustomerRepository customerRepository = new CustomerRepository();
 IShowService showService = new ShowService(showRepository);
-IReservationRepository reservationRepository = new ReservationRepository(showRepository, customerRepository);
+IReservationRepository reservationRepository = new ReservationJSONRepository();
 IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
 INewsPostRepository newsPostRepository = new NewsPostRepository();
 
@@ -288,7 +288,7 @@ void DisplayReservation()
 {
     foreach (Reservation reservation in reservationRepository.GetAll())
     {
-        Console.WriteLine($"Reservation [{reservation.ReservationId} - {reservation.Customer.FullName} - {reservation.TotalSeats}]");
+        Console.WriteLine($"Reservation [{reservation.ReservationId}] - Kunde: {reservation.Customer.FullName}, mail: {reservation.Customer.Email}, Antal billetter: {reservation.TotalSeats}");
     }
 }
 
