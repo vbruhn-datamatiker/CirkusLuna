@@ -135,8 +135,9 @@ while (true)
                 Console.WriteLine("3 - Vis liste over artister");
                 Console.WriteLine("4 - Vis liste over reservationer");
                 Console.WriteLine("5 - Vis liste over nyheder");
+                Console.WriteLine("6 - Vis liste over medarbejdere");
 
-                Console.WriteLine("0 - Log ud");
+                Console.WriteLine("\n0 - Log ud");
 
                 string employeeChoice = Console.ReadLine();
 
@@ -233,6 +234,10 @@ while (true)
                 {
                     DisplayNews();
                 }
+                else if (employeeChoice == "6")
+                {
+                    DisplayEmployees();
+                }
 
                 else if (employeeChoice == "0")
                 {
@@ -323,6 +328,14 @@ void DisplayNews()
         Console.WriteLine($"[{post.NewsPostId}] | {post.Title} | {post.Content} - Udgivet d. {post.PublishedDateTime}");
     }
 }
+
+void DisplayEmployees()
+    {
+        foreach (Employee employee in employeeRepository.GetAll())
+        {
+            Console.WriteLine($"Medarbejder nr: [{employee.Id}] Navn: {employee.FullName} | Stilling: {employee.Role} | Kontakt: {employee.Email}");
+        }
+    }
 
 // -------------------- Create() funktioner ----------------------------
 
