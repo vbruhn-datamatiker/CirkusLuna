@@ -4,9 +4,10 @@ using CirkusLuna.ClassLibrary.Model;
 namespace CirkusLuna.ClassLibrary.Repository
 {
     public class CustomerJSONRepository : ICustomerRepository
+    //JSON persistence was implemented to save data between sessions. The file path is currently hardcoded to C:\temp\ due to path resolution challenges in ASP.NET Core. A more robust solution would use IWebHostEnvironment.ContentRootPath."
     {
         // Stien til JSON filen - gemmes i programmets output mappe
-        private readonly string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "customers.json");
+        private readonly string _path = @"C:\temp\customers.json";
         private List<Customer> _customerList;
 
         public CustomerJSONRepository()
@@ -26,7 +27,7 @@ namespace CirkusLuna.ClassLibrary.Repository
                     new Customer(3, "Viggo", "Viggosen", "vigmhmail@mail.com", "20345678", false),
                     new Customer(4, "Maja", "Majasen", "majmhmail@mail.com", "89345678", false),
                     new Customer(5, "Shen", "Hana", "shemhmail@mail.com", "12995678", true)
-                };       
+                };
                 SaveToFile();
             }
         }

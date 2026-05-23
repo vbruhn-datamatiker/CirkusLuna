@@ -5,8 +5,10 @@ namespace CirkusLuna.ClassLibrary.Repository
 {
     public class NewsPostJSONRepository : INewsPostRepository
     {
+        //JSON persistence was implemented to save data between sessions. The file path is currently hardcoded to C:\temp\ due to path resolution challenges in ASP.NET Core. A more robust solution would use IWebHostEnvironment.ContentRootPath."
+
         // Stien til JSON filen - gemmes i programmets output mappe
-        private readonly string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "newsposts.json");
+        private readonly string _path = @"C:\temp\newsposts.json";
         private List<NewsPost> _newsposts;
 
         public NewsPostJSONRepository()
