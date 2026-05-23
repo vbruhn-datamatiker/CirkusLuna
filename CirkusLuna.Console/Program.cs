@@ -162,7 +162,7 @@ while (true)
                     }
                     else if (employeeEditShow == "3")
                     {
-                        //Logik til DeleteShow
+                        DeleteShow();
                     }
 
 
@@ -187,6 +187,7 @@ while (true)
                     DisplayArtists();
                     Console.WriteLine("1 - Ønsker du at ændre oplysninger på en Artist?");
                     Console.WriteLine("2 - Ønsker du at oprette en ny Artist?");
+                    Console.WriteLine("3 - Øsker du at fyre (slette) en artist?");
 
                     Console.WriteLine("\n0 - Gå tilbage til Menu");
                     string employeeEditArtist = Console.ReadLine();
@@ -198,6 +199,11 @@ while (true)
                     {
                         CreateArtist();
                     }
+                    else if (employeeEditArtist == "3")
+                    {
+                        DeleteArtist();
+                    }
+
 
                     else if (employeeEditArtist == "0")
                     {
@@ -818,6 +824,37 @@ void DeleteNewsPost()
         Console.WriteLine("Post slettet.");
     }
 
+void DeleteArtist()
+    {
+        Console.WriteLine("Angiv ID på den artist der skal slettes: ");
+        int artistId = int.Parse(Console.ReadLine());
+        //Find artist i repository
+        Artist artist = artistRepository.GetById(artistId);
+        //slet
+        artistRepository.Delete(artistId);
+        Console.WriteLine($"Artist {artist.FirstName} er fyret.");
+    }
+
+void DeleteShow()
+    {
+        Console.WriteLine("Angiv ID på det show der skal slettes: ");
+        int showId = int.Parse(Console.ReadLine());
+        //Find show i repository
+        Show show = showRepository.GetById(showId);
+        Console.WriteLine("Er du sikker? Denne handling kan ikke fortrydes:\n" +
+            "1 - Ja, slet valgt show.\n" +
+            "2 - Nej, fortryd og gå tilbage til menu. ");
+        int deleteShowChoice = int.Parse(Console.ReadLine());
+        if (deleteShowChoice == 1)
+        {
+            showRepository.Delete(showId);
+            Console.WriteLine("Show slettet.");
+        } 
+        else if (deleteShowChoice == 2)
+        {
+            Console.WriteLine("Valg fortrudt. Går tilbage til menu.");
+        }
+    }
 
 
 } //Ende af While (true)
