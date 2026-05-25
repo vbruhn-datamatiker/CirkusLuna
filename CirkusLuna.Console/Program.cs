@@ -1,15 +1,17 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
+using CirkusLuna.Console.Controller;
 
-//Forbind repositories - ligger uden for while(true) så data bevares.
+//Repositories
 IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowJSONRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 ICustomerRepository customerRepository = new CustomerJSONRepository();
 IReservationRepository reservationRepository = new ReservationJSONRepository();
 INewsPostRepository newsPostRepository = new NewsPostJSONRepository();
-//Service
+
+//Services
 IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
 ICustomerService customerService = new CustomerService(customerRepository);
 IArtistService artistService = new ArtistService(artistRepository);
@@ -17,8 +19,11 @@ IShowService showService = new ShowService(showRepository);
 INewsPostService newsPostService = new NewsPostService(newsPostRepository);
 IEmployeeService employeeService = new EmployeeService(employeeRepository);
 
+//Controller - modtager alle services
+ConsoleController controller = new ConsoleController(
+    showService, reservationService, customerService,
+    artistService, newsPostService, employeeService);
 
-//Console App Program
 while (true)
 {
     //Indledning
@@ -54,7 +59,7 @@ while (true)
         {
             Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
             int showId = int.Parse(Console.ReadLine());
-            Show chosenShow = showService.GetById(showId);
+            Show chosenShow = controller.GetShowById(showId);
 
             //Tjekker at indtastet showId er valid
             if (chosenShow == null)
@@ -78,7 +83,7 @@ while (true)
         //Søg efter show i en bestemt by
         Console.WriteLine("Indtast bynavn");
         string cityInput = Console.ReadLine();
-        List<Show> shows = showService.GetByCity(cityInput);
+        List<Show> shows = controller.GetShowsByCity(cityInput);
 
         if (shows.Count == 0)
         {
@@ -108,7 +113,7 @@ while (true)
         Console.WriteLine("Angiv venligst dit medarbejder password:");
         string employeePassword = Console.ReadLine();
         //Ny medarbejder logIn
-        Employee loggedIn = employeeService.Login(employeePassword);
+        Employee loggedIn = controller.Login(employeePassword);
 
         //Hvis loggedIn ikke er null (Medarbejder fundet)
         if (loggedIn != null)
@@ -215,7 +220,7 @@ while (true)
                     {
                         Console.WriteLine("Angiv ID på det show du vil oprette en reservation til: ");
                         int employeeCreateReservation = int.Parse(Console.ReadLine());
-                        Show chosenShow = showService.GetById(employeeCreateReservation);
+                        Show chosenShow = controller.GetShowById(employeeCreateReservation);
                         CreateReservation(chosenShow);
                     }
                     else if (employeeEditReservation == "2")
@@ -279,11 +284,11 @@ while (true)
 
 void DisplayShows()
 {
-    foreach (Show show in showService.GetAll())
+    foreach (Show show in controller.GetAllShows())
     {
         int bookedStandardSeats = 0;
         int bookedVipSeats = 0;
-            foreach (Reservation r in reservationService.GetByShow(show.Id))
+            foreach (Reservation r in controller.GetReservationsByShow(show.Id))
             {
                 if (r.TicketType == TicketType.VIP)
                 {
@@ -319,7 +324,7 @@ void DisplayShows()
 
 void DisplayReservation()
 {
-    foreach (Reservation reservation in reservationService.GetAll())
+    foreach (Reservation reservation in controller.GetAllReservations())
     {
         Console.WriteLine($"Reservation [{reservation.ReservationId}] - Kunde: {reservation.Customer.FullName}, mail: {reservation.Customer.Email}, Antal billetter: {reservation.TotalSeats}");
     }
@@ -327,7 +332,7 @@ void DisplayReservation()
 
 void DisplayCustomers()
 {
-    foreach (Customer customer in customerService.GetAll())
+    foreach (Customer customer in controller.GetAllCustomers())
     {
         Console.WriteLine($"Kunde nr: [{customer.Id}] - {customer.FullName} - {customer.Email} - {customer.PhoneNumber}");
     }
@@ -335,7 +340,7 @@ void DisplayCustomers()
 
 void DisplayArtists()
 {
-    foreach (Artist artist in artistService.GetAll())
+    foreach (Artist artist in controller.GetAllArtists())
     {
         Console.WriteLine($"[{artist.Id}] {artist.Act}, {artist.FullName}");
     }
@@ -343,7 +348,7 @@ void DisplayArtists()
 
 void DisplayNews()
 {
-    foreach (NewsPost post in newsPostService.GetAll())
+    foreach (NewsPost post in controller.GetAllNewsPosts())
     {
         Console.WriteLine($"[{post.NewsPostId}] | {post.Title} | {post.Content} - Udgivet d. {post.PublishedDateTime}");
     }
@@ -351,7 +356,7 @@ void DisplayNews()
 
 void DisplayEmployees()
     {
-        foreach (Employee employee in employeeService.GetAll())
+        foreach (Employee employee in controller.GetAllEmployees())
         {
             Console.WriteLine($"Medarbejder nr: [{employee.Id}] Navn: {employee.FullName} | Stilling: {employee.Role} | Kontakt: {employee.Email}");
         }
@@ -397,41 +402,22 @@ void CreateReservation(Show chosenShow)
     Console.WriteLine("Hvor mange billetter ønsker du?:  ");
     int ticketAmount = int.Parse(Console.ReadLine());
 
-    //Auto-tildeler kunde et sæde, baseret på nuværende bookings for samme show
-    List<Reservation> extistingReservations =
-    reservationService.GetByShow(chosenShow.Id);
-    int nextSeatNumber = 1;
-    foreach (Reservation r in extistingReservations)
-    {
-        nextSeatNumber += r.TotalSeats;
-    }
+    //Controller koordinerer oprettelse af kunde og reservation
+    bool createCustomerSuccess = controller.CreateReservation(chosenShow, firstName, lastName, email, phoneNumber, ticketType, ticketAmount);
 
-    //Opret Reservation
-    int reservationId = reservationService.GetAll().Count + 1;
-    Reservation newReservation = new Reservation(
-        reservationId,
-        new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
-        ticketType,
-        ticketAmount,
-        nextSeatNumber,
-        newCustomer,
-        chosenShow
-        );
-
-    //Tjek fra servicelag at reservationen kan foretages
-    bool success = reservationService.CreateReservation(newReservation);
-
-    if (success)
+    if (createCustomerSuccess)
     {
         Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
         Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
         Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
-        Console.WriteLine($"Du har følgende sæder nr: {nextSeatNumber} - {nextSeatNumber + ticketAmount + 1}");
     }
     else
     {
-        Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er i fortiden");
+        Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er allerede afholdt.");
     }
+
+       
+
 }
 
 void CreateArtist()
@@ -445,7 +431,7 @@ void CreateArtist()
         Console.WriteLine("Indtast Act på ny artist: ");
         string act = Console.ReadLine();
 
-        Artist newArtist = artistService.AddArtist(firstName, lastName, email, act);
+        Artist newArtist = controller.CreateArtist(firstName, lastName, email, act);
         Console.WriteLine($"Artist nr: [{newArtist.Id}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
     }
 
@@ -461,7 +447,7 @@ void CreateEmployee()
         string role = Console.ReadLine();
 
         //Kald til service og opret ny medarbejder.
-        Employee newEmployee = employeeService.AddEmployee(firstName, lastName, email, role);
+        Employee newEmployee = controller.CreateEmployee(firstName, lastName, email, role);
 
         Console.WriteLine($"Velkommen til ny {newEmployee.Role} - {newEmployee.FullName}, {newEmployee.Email}.\nMedarbejder password: {newEmployee.Password}");
     }
@@ -473,7 +459,7 @@ void CreateNewsPost()
         Console.WriteLine("Skriv postens indhold: ");
         string newsContent = Console.ReadLine();
 
-        NewsPost newPost = newsPostService.AddNewsPost(newsTitle, newsContent);
+        NewsPost newPost = controller.CreateNewsPost(newsTitle, newsContent);
 
         Console.WriteLine($"Din post [{newPost.NewsPostId}] er oprettet d. {newPost.PublishedDateTime}\n" +
             $"{newsTitle} - {newsContent}");
@@ -494,7 +480,7 @@ void CreateShow()
         Console.WriteLine($"Angiv by hvor showet skal finde sted: ");
         string cityName = Console.ReadLine();
 
-        Show newShow = showService.AddShow(showName, newDate, showStandardTickets, showVipTickets, cityName);
+        Show newShow = controller.CreateShow(showName, newDate, showStandardTickets, showVipTickets, cityName);
 
         Console.WriteLine($"{newShow.ShowName} er oprettet og afholdes d. {newShow.Date}. Der er {showStandardTickets} standard pladser og {showVipTickets} VIP pladser." +
             $"\n Forestillingen finder sted i {newShow.City.Name}");
@@ -531,19 +517,19 @@ void UpdateCustomer()
             Console.WriteLine("Indtast nyt efternavn:");
             string lastName = Console.ReadLine();
             //Opdater ændringer
-            customerService.UpdateName(existingCustomerId, firstName, lastName);
+            controller.UpdateCustomerName(existingCustomerId, firstName, lastName);
         }
         else if (updateCustomerChoice == 2)
         {
             Console.WriteLine("Indtast ny email:");
             string email = Console.ReadLine();
-            customerService.UpdateEmail(existingCustomerId, email);
+                controller.UpdateCustomerEmail(existingCustomerId, email);
         }
         else if (updateCustomerChoice == 3)
         {
             Console.WriteLine("Indtast nyt telefon nr.:");
             string PhoneNumber = Console.ReadLine();
-            customerService.UpdatePhoneNumber(existingCustomerId, PhoneNumber);
+                controller.UpdateCustomerPhoneNumber(existingCustomerId, PhoneNumber);
         }
         else if (updateCustomerChoice == 0)
         {
@@ -580,20 +566,20 @@ void UpdateArtist()
             Console.WriteLine("Indtast nyt efternavn:");
             string lastName = Console.ReadLine();
             //Opdater ændringer
-            artistService.UpdateName(existingArtistId, firstName, lastName);
+            controller.UpdateArtistName(existingArtistId, firstName, lastName);
 
         }
         else if (updateArtistChoice == 2)
         {
             Console.WriteLine("Indtast ny email:");
             string email = Console.ReadLine();
-            artistService.UpdateEmail(existingArtistId, email);
+            controller.UpdateArtistEmail(existingArtistId, email);
         }
         else if (updateArtistChoice == 3)
         {
             Console.WriteLine("Indtast ny Act:");
             string act = Console.ReadLine();
-            artistService.UpdateAct(existingArtistId, act);
+            controller.UpdateArtistAct(existingArtistId, act);
         }
         else if (updateArtistChoice == 0)
         {
@@ -630,14 +616,14 @@ void UpdateReservation()
             string email = Console.ReadLine();
             Console.WriteLine("Indtast nyt tlf nummer: ");
             string phoneNumber = Console.ReadLine();
-            //Opdater ændringer gennem kald til service lag.
-            reservationService.UpdateCustomerInfo(existingReservationId, email, phoneNumber);
+            //Opdater ændringer
+            controller.UpdateReservationCustomerInfo(existingReservationId, email, phoneNumber);
         }
         else if (updateReservationChoice == 2)
         {
              Console.WriteLine("Indtast ønsket antal billetter: ");
              int newTicketAmount = int.Parse(Console.ReadLine());
-             bool success = reservationService.UpdateReservationTickets(existingReservationId, newTicketAmount);
+             bool success = controller.UpdateReservationTickets(existingReservationId, newTicketAmount);
                 if (success)
                     Console.WriteLine($"Billetter opdateret til {newTicketAmount}.");
                 else
@@ -677,14 +663,14 @@ void UpdateShow()
             {
                 Console.WriteLine("Angiv nyt navn til show: ");
                 string showName = Console.ReadLine();
-                showService.UpdateShowName(existingShowId, showName);
+                controller.UpdateShowName(existingShowId, showName);
                 Console.WriteLine($"Du har ændret navnet til {showName}");
             }
             else if (updateShowChoice == "2")
             {
                 Console.WriteLine("Angiv ny dato for show i YYYY-MM-DD format:");
                 DateOnly date = DateOnly.Parse(Console.ReadLine());
-                showService.UpdateShowDate(existingShowId, date);
+                controller.UpdateShowDate(existingShowId, date);
 
                 Console.WriteLine($"Dato ændret til {date}");
 
@@ -693,14 +679,14 @@ void UpdateShow()
             {
                 Console.WriteLine("Angiv hvor mange ledige standard pladser der skal være: ");
                 int updatedStandardSeat = int.Parse(Console.ReadLine());
-                showService.UpdateShowSeats(existingShowId, updatedStandardSeat);
+                controller.UpdateShowSeats(existingShowId, updatedStandardSeat);
                 Console.WriteLine($"Du har oprettet {updatedStandardSeat} standard pladser. ");
             }
             else if (updateShowChoice == "4")
             {
                 Console.WriteLine("Angiv hvor mange ledige VIP pladser der skal være: ");
                 int UpdatedVipSeat = int.Parse(Console.ReadLine());
-                showService.UpdateShowVipSeats(existingShowId, UpdatedVipSeat);
+                controller.UpdateShowVipSeats(existingShowId, UpdatedVipSeat);
                 Console.WriteLine($"Du har oprettet {UpdatedVipSeat} VIP pladser. ");
             }
             else if (updateShowChoice == "5")
@@ -708,7 +694,7 @@ void UpdateShow()
                 Show show = showService.GetById(existingShowId); //Reference så der kan hentes data fra show (til {show.City.Name})
                 Console.WriteLine($"Hvor skal showet finde sted istedet for {show.City.Name}?: ");
                 string UpdatedShowCity = Console.ReadLine();
-                showService.UpdateShowCity(existingShowId, UpdatedShowCity);
+                controller.UpdateShowCity(existingShowId, UpdatedShowCity);
 
                 Console.WriteLine($"Showet er flyttet fra {show.City.Name} til {UpdatedShowCity}");
             }
@@ -730,7 +716,7 @@ void DeleteReservation()
     {
         Console.WriteLine("Angiv ID på den reservation du ønsker at slette: ");
         int reservationId = int.Parse(Console.ReadLine());
-        reservationService.DeleteReservation(reservationId);
+        controller.DeleteReservation(reservationId);
         Console.WriteLine("Reservationen er slettet.");
     }
 
@@ -739,7 +725,7 @@ void DeleteNewsPost()
         Console.WriteLine("Angiv ID på den news post der skal slettes: ");
         int newsPostId = int.Parse(Console.ReadLine()); 
         NewsPost newsPost = newsPostService.GetById(newsPostId);
-        newsPostService.DeleteNewsPost(newsPostId);
+        controller.DeleteNewsPost(newsPostId);
         Console.WriteLine("Post slettet.");
     }
 
@@ -748,7 +734,7 @@ void DeleteArtist()
         Console.WriteLine("Angiv ID på den artist der skal slettes: ");
         int artistId = int.Parse(Console.ReadLine());
         Artist artist = artistService.GetById(artistId);
-        artistService.DeleteArtist(artistId);
+        controller.DeleteArtist(artistId);
         Console.WriteLine($"Artist {artist.FullName} er fyret.");
     }
 
@@ -757,14 +743,14 @@ void DeleteShow()
         Console.WriteLine("Angiv ID på det show der skal slettes: ");
         int showId = int.Parse(Console.ReadLine());
         //Find show i service
-        Show show = showService.GetById(showId);
+        Show show = controller.GetShowById(showId);
         Console.WriteLine($"Er du sikker på at du vil slette {show.ShowName}? Denne handling kan ikke fortrydes:\n" +
             "1 - Ja, slet valgt show.\n" +
             "2 - Nej, fortryd og gå tilbage til menu. ");
         int deleteShowChoice = int.Parse(Console.ReadLine());
         if (deleteShowChoice == 1)
         {
-            showService.DeleteShow(showId);
+            controller.DeleteShow(showId);
             Console.WriteLine("Show slettet.");
         } 
         else if (deleteShowChoice == 2)
