@@ -15,6 +15,7 @@ ICustomerService customerService = new CustomerService(customerRepository);
 IArtistService artistService = new ArtistService(artistRepository);
 IShowService showService = new ShowService(showRepository);
 INewsPostService newsPostService = new NewsPostService(newsPostRepository);
+IEmployeeService employeeService = new EmployeeService(employeeRepository);
 
 
 //Console App Program
@@ -106,22 +107,8 @@ while (true)
     {
         Console.WriteLine("Angiv venligst dit medarbejder password:");
         string employeePassword = Console.ReadLine();
-
-        //Medarbejder loggedIn. Default med ingen fundet medarbejder - eksisterer efter loop
-        Employee loggedIn = null;
-
-        //Gennemgår alle medarbejdere i listen
-        foreach (Employee employee in employeeRepository.GetAll())
-        {
-            //Tjekker efter match med password
-            if (employee.Password == employeePassword)
-            {
-                //Gemmer medarbejder i loggedIn
-                loggedIn = employee;
-                //Stop loop
-                break;
-            }
-        }
+        //Ny medarbejder logIn
+        Employee loggedIn = employeeService.Login(employeePassword);
 
         //Hvis loggedIn ikke er null (Medarbejder fundet)
         if (loggedIn != null)
@@ -364,7 +351,7 @@ void DisplayNews()
 
 void DisplayEmployees()
     {
-        foreach (Employee employee in employeeRepository.GetAll())
+        foreach (Employee employee in employeeService.GetAll())
         {
             Console.WriteLine($"Medarbejder nr: [{employee.Id}] Navn: {employee.FullName} | Stilling: {employee.Role} | Kontakt: {employee.Email}");
         }
@@ -472,12 +459,9 @@ void CreateEmployee()
         string email = Console.ReadLine();
         Console.WriteLine($"Angiv hvilken stilling {firstName} skal have?: ");
         string role = Console.ReadLine();
-        string password = lastName;
 
-        int newEmployeeId = employeeRepository.GetAll().Count + 1;
-        //Opret og tilføj ny medarbejder
-        Employee newEmployee = new Employee(newEmployeeId, firstName, lastName, email, role, password);
-        employeeRepository.Add(newEmployee);
+        //Kald til service og opret ny medarbejder.
+        Employee newEmployee = employeeService.AddEmployee(firstName, lastName, email, role);
 
         Console.WriteLine($"Velkommen til ny {newEmployee.Role} - {newEmployee.FullName}, {newEmployee.Email}.\nMedarbejder password: {newEmployee.Password}");
     }

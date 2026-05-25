@@ -1,8 +1,6 @@
 ﻿using CirkusLuna.ClassLibrary.Model;
 using CirkusLuna.ClassLibrary.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace CirkusLuna.ClassLibrary.Service
 {
