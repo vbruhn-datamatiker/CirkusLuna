@@ -786,7 +786,7 @@ void DeleteShow()
             try
             {
                 //Forsøger at konvertere input til int
-                return ReadInt();
+                return int.Parse(Console.ReadLine());
             }
             catch (FormatException)
             {
