@@ -91,11 +91,14 @@ namespace CirkusLuna.Pages
                 selectedShow
                 );
 
+
+
             //use service to validate and save
             bool success = _reservationService.CreateReservation(newReservation);
             if (success)
             {
-                Message = $"Tak {FirstName}! Din reservation er oprettet for {selectedShow.ShowName} i {selectedShow.City.Name} d. {selectedShow.Date} - Billettype: {TicketType}, Antal: {TotalSeats}";
+
+                Message = $"Tak {FirstName}! Din reservation er oprettet for {selectedShow.ShowName} i {selectedShow.City.Name} d. {selectedShow.Date} - Billettype: {TicketType.ToString()}, Antal: {TotalSeats}";
             }
             else
             {
