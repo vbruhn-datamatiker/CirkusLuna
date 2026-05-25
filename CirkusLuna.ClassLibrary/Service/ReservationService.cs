@@ -80,5 +80,61 @@ namespace CirkusLuna.ClassLibrary.Service
         {
             return _reservationRepository.GetByShow(id);
         }
+
+        //Find og returner reservation på ID
+        public Reservation GetById(int id)
+        {
+            return _reservationRepository.GetById(id);
+        }
+
+        //Opdater antal billetter - tjek tilgængelighed først
+        public bool UpdateReservationTickets(int reservationId, int newTicketAmount)
+        {
+            Reservation reservation = _reservationRepository.GetById(reservationId);
+
+            //Tæller bookede pladser for show, ekskluderer denne reservation
+            int bookedSeats = 0;
+            foreach (Reservation r in _reservationRepository.GetByShow(reservation.Show.Id))
+            {
+                if (r.ReservationId != reservation.ReservationId)
+                {
+                    bookedSeats += r.TotalSeats;
+                }
+            }
+            //Tjek om der er nok pladser af den rigtige type
+            int availableSeats = 0;
+            if (reservation.TicketType == TicketType.VIP)
+            {
+                availableSeats = reservation.Show.VipSeats;
+            }
+            else
+            {
+                availableSeats = reservation.Show.Seats;
+            }
+
+            if (bookedSeats + newTicketAmount <= availableSeats)
+            {
+                reservation.TotalSeats = newTicketAmount;
+                _reservationRepository.Update(reservation);
+                return true;
+            }
+            return false;
+        }
+
+        // Opdaterer kundeoplysninger på reservation
+        public void UpdateCustomerInfo(int reservationId, string email, string phoneNumber)
+        {
+            Reservation reservation = _reservationRepository.GetById(reservationId);
+            reservation.Customer.Email = email;
+            reservation.Customer.PhoneNumber = phoneNumber;
+            _reservationRepository.Update(reservation);
+        }
+
+        // Sletter reservation på ID
+        public void DeleteReservation(int id)
+        {
+            _reservationRepository.Delete(id);
+        }
+
     }
 }
