@@ -14,6 +14,7 @@ IReservationService reservationService = new ReservationService(reservationRepos
 ICustomerService customerService = new CustomerService(customerRepository);
 IArtistService artistService = new ArtistService(artistRepository);
 IShowService showService = new ShowService(showRepository);
+INewsPostService newsPostService = new NewsPostService(newsPostRepository);
 
 
 //Console App Program
@@ -360,7 +361,7 @@ void DisplayArtists()
 
 void DisplayNews()
 {
-    foreach (NewsPost post in newsPostRepository.GetAll())
+    foreach (NewsPost post in newsPostService.GetAll())
     {
         Console.WriteLine($"[{post.NewsPostId}] | {post.Title} | {post.Content} - Udgivet d. {post.PublishedDateTime}");
     }
@@ -495,15 +496,9 @@ void CreateNewsPost()
         Console.WriteLine("Skriv postens indhold: ");
         string newsContent = Console.ReadLine();
 
-        //Sæt automatisk dato og tid til "nu"
-        DateTime publishedDateTime = DateTime.Now;
+        NewsPost newPost = newsPostService.AddNewsPost(newsTitle, newsContent);
 
-        int newsPostId = newsPostRepository.GetAll().Count + 1;
-        //Opret og tilføj ny post til NewsPostRepo
-        NewsPost newNewsPost = new NewsPost(newsPostId, newsTitle, newsContent, publishedDateTime);
-        newsPostRepository.Add(newNewsPost);
-
-        Console.WriteLine($"Din post [{newsPostId}] er oprettet d. {publishedDateTime}\n" +
+        Console.WriteLine($"Din post [{newPost.NewsPostId}] er oprettet d. {newPost.PublishedDateTime}\n" +
             $"{newsTitle} - {newsContent}");
 
     }
@@ -818,10 +813,9 @@ void DeleteNewsPost()
     {
         Console.WriteLine("Angiv ID på den news post der skal slettes: ");
         int newsPostId = int.Parse(Console.ReadLine());
-        //Find post i repository
-        NewsPost newsPost = newsPostRepository.GetById(newsPostId);
-        //Slet
-        newsPostRepository.Delete(newsPostId);
+        
+        NewsPost newsPost = newsPostService.GetById(newsPostId);
+        newsPostService.DeleteNewsPost(newsPostId);
         Console.WriteLine("Post slettet.");
     }
 
