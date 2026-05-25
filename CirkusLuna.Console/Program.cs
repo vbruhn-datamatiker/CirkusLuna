@@ -292,13 +292,8 @@ while (true)
 
 void DisplayShows()
 {
-    //Vis alle fremtidige shows og artister
-    List<Show> shows = showRepository.GetAll();
-    foreach (Show show in shows)
+    foreach (Show show in showService.GetAll())
     {
-        //Tilføjet d. 20-5
-        //Udregner til booked seats for det valgte show
-        //(show.TotalSeats) udskiftes med RemainingSeats, så det der oprettes i ReservationRepo også vises.
         int bookedStandardSeats = 0;
         int bookedVipSeats = 0;
             foreach (Reservation r in reservationRepository.GetByShow(show.Id))
@@ -337,7 +332,7 @@ void DisplayShows()
 
 void DisplayReservation()
 {
-    foreach (Reservation reservation in reservationRepository.GetAll())
+    foreach (Reservation reservation in reservationService.GetAll())
     {
         Console.WriteLine($"Reservation [{reservation.ReservationId}] - Kunde: {reservation.Customer.FullName}, mail: {reservation.Customer.Email}, Antal billetter: {reservation.TotalSeats}");
     }
@@ -515,17 +510,10 @@ void CreateShow()
         Console.WriteLine("Angiv hvor mange VIP pladser showet skal have: ");
         int showVipTickets = int.Parse(Console.ReadLine());
         Console.WriteLine($"Angiv by hvor showet skal finde sted: ");
-        string showCity = Console.ReadLine();
-        //Opret ny city objekt
-        int newCityId = showRepository.GetAll().Count + 1;
-        City newCity = new City(newCityId, showCity );
-        
-        //Opret nyt show objekt
-        int newShowId = showRepository.GetAll().Count + 1;
-        Show newShow = new Show(newShowId, showName, newDate, showStandardTickets, showVipTickets, newCity);
-        
- 
-        showRepository.Add(newShow);
+        string cityName = Console.ReadLine();
+
+        Show newShow = showService.AddShow(showName, newDate, showStandardTickets, showVipTickets, cityName);
+
         Console.WriteLine($"{newShow.ShowName} er oprettet og afholdes d. {newShow.Date}. Der er {showStandardTickets} standard pladser og {showVipTickets} VIP pladser." +
             $"\n Forestillingen finder sted i {newShow.City.Name}");
     }
@@ -639,7 +627,6 @@ void UpdateReservation()
     //Finder eksisterende Artist på ID
     Console.WriteLine("Skriv ID på den reservation der skal ændres: ");
     int existingReservationId = int.Parse(Console.ReadLine());
-    Reservation reservation = reservationRepository.GetById(existingReservationId);
 
     //Holder update() kørende
     bool updateReservation = true;
@@ -659,54 +646,21 @@ void UpdateReservation()
         if (updateReservationChoice == 1)
         {
             Console.WriteLine("Indtast ny email: ");
-            reservation.Customer.Email = Console.ReadLine();
+            string email = Console.ReadLine();
             Console.WriteLine("Indtast nyt tlf nummer: ");
-            reservation.Customer.PhoneNumber = Console.ReadLine();
+            string phoneNumber = Console.ReadLine();
             //Opdater ændringer gennem kald til service lag.
-            customerService.UpdateEmail(reservation.Customer.Id, reservation.Customer.Email);
-            customerService.UpdatePhoneNumber(reservation.Customer.Id, reservation.Customer.PhoneNumber);
-                
-            reservationRepository.Update(reservation);
+            reservationService.UpdateCustomerInfo(existingReservationId, email, phoneNumber);
         }
         else if (updateReservationChoice == 2)
         {
-            
-            Console.WriteLine("Indtast ønsket antal billetter: ");
-            int newTicketAmount = int.Parse(Console.ReadLine());
-
-            //Logik til at tjekke tilgængelighed af ønsket antal sæder gennem service
-            //Tæl eksisterende bookede billetter/sæder for det specifikke show - ekskluderer denne reservation
-            int bookedSeats = 0;
-            foreach (Reservation r in reservationRepository.GetByShow(reservation.Show.Id))
-            {
-                if (r.ReservationId != reservation.ReservationId)
-                {
-                    bookedSeats += r.TotalSeats;
-                }
-            }
-            //Tjekker om reservation er VIP eller standard og vælger den korrekte type.
-            int availableSeats = 0;
-            if (reservation.TicketType == TicketType.VIP)
-            {
-                availableSeats = reservation.Show.VipSeats;
-            } 
-            else
-            {
-                availableSeats = reservation.Show.Seats;
-            }
-
-            if (bookedSeats + newTicketAmount <= availableSeats)
-            {
-                reservation.TotalSeats = newTicketAmount;
-                reservationRepository.Update(reservation);
-                Console.WriteLine($"Billetter opdateret. Du har nu {reservation.TotalSeats} billetter.");
-            }
-            else
-            {
-                Console.WriteLine("Der er ikke nok ledige billetter.");
-            }
-
-
+             Console.WriteLine("Indtast ønsket antal billetter: ");
+             int newTicketAmount = int.Parse(Console.ReadLine());
+             bool success = reservationService.UpdateReservationTickets(existingReservationId, newTicketAmount);
+                if (success)
+                    Console.WriteLine($"Billetter opdateret til {newTicketAmount}.");
+                else
+                    Console.WriteLine("Der er ikke nok ledige billetter.");
         }
 
         else if (updateReservationChoice == 0)
@@ -721,7 +675,6 @@ void UpdateShow()
     {
         Console.WriteLine("Angiv ID på det show der skal ændres: ");
         int existingShowId = int.Parse(Console.ReadLine());
-        Show show = showRepository.GetById(existingShowId);
 
         //Holder update() kørende
         bool updateShow = true;
@@ -742,47 +695,41 @@ void UpdateShow()
             if (updateShowChoice == "1")
             {
                 Console.WriteLine("Angiv nyt navn til show: ");
-                show.ShowName = Console.ReadLine();
-                showRepository.Update(show);
-                Console.WriteLine($"Du har ændret navnet til {show.ShowName}");
+                string showName = Console.ReadLine();
+                showService.UpdateShowName(existingShowId, showName);
+                Console.WriteLine($"Du har ændret navnet til {showName}");
             }
             else if (updateShowChoice == "2")
             {
                 Console.WriteLine("Angiv ny dato for show i YYYY-MM-DD format:");
-                string newDateInput = Console.ReadLine();
-                DateOnly newDate = DateOnly.Parse(newDateInput);
+                DateOnly date = DateOnly.Parse(Console.ReadLine());
+                showService.UpdateShowDate(existingShowId, date);
 
-                //Ændre show.Date til newDate
-                show.Date = newDate;
-                showRepository.Update(show);
-                Console.WriteLine($"Dato ændret til {show.Date}");
+                Console.WriteLine($"Dato ændret til {date}");
 
             }
             else if (updateShowChoice == "3")
             {
                 Console.WriteLine("Angiv hvor mange ledige standard pladser der skal være: ");
-                int UpdatedStandardSeat = int.Parse(Console.ReadLine());
-                show.Seats = UpdatedStandardSeat;
-                showRepository.Update(show);
-                Console.WriteLine($"Du har oprettet {show.Seats} standard pladser. ");
+                int updatedStandardSeat = int.Parse(Console.ReadLine());
+                showService.UpdateShowSeats(existingShowId, updatedStandardSeat);
+                Console.WriteLine($"Du har oprettet {updatedStandardSeat} standard pladser. ");
             }
             else if (updateShowChoice == "4")
             {
                 Console.WriteLine("Angiv hvor mange ledige VIP pladser der skal være: ");
                 int UpdatedVipSeat = int.Parse(Console.ReadLine());
-                show.Seats = UpdatedVipSeat;
-                showRepository.Update(show);
-                Console.WriteLine($"Du har oprettet {show.VipSeats} VIP pladser. ");
+                showService.UpdateShowVipSeats(existingShowId, UpdatedVipSeat);
+                Console.WriteLine($"Du har oprettet {UpdatedVipSeat} VIP pladser. ");
             }
             else if (updateShowChoice == "5")
             {
+                Show show = showService.GetById(existingShowId); //Reference så der kan hentes data fra show (til {show.City.Name})
                 Console.WriteLine($"Hvor skal showet finde sted istedet for {show.City.Name}?: ");
                 string UpdatedShowCity = Console.ReadLine();
-                //Opret ny city objekt
-                City newCity = new City(show.City.Id, UpdatedShowCity);
-                show.City = newCity;
-                showRepository.Update(show);
-                Console.WriteLine($"{show.ShowName} er flyttet til {show.City.Name}");
+                showService.UpdateShowCity(existingShowId, UpdatedShowCity);
+
+                Console.WriteLine($"Showet er flyttet fra {show.City.Name} til {UpdatedShowCity}");
             }
             //Afslut updateShow
             else if (updateShowChoice == "0")
@@ -802,18 +749,14 @@ void DeleteReservation()
     {
         Console.WriteLine("Angiv ID på den reservation du ønsker at slette: ");
         int reservationId = int.Parse(Console.ReadLine());
-        //Find reservation i repository
-        Reservation reservation = reservationRepository.GetById(reservationId);
-        //Slet
-        reservationRepository.Delete(reservationId);
+        reservationService.DeleteReservation(reservationId);
         Console.WriteLine("Reservationen er slettet.");
     }
 
 void DeleteNewsPost()
     {
         Console.WriteLine("Angiv ID på den news post der skal slettes: ");
-        int newsPostId = int.Parse(Console.ReadLine());
-        
+        int newsPostId = int.Parse(Console.ReadLine()); 
         NewsPost newsPost = newsPostService.GetById(newsPostId);
         newsPostService.DeleteNewsPost(newsPostId);
         Console.WriteLine("Post slettet.");
@@ -832,15 +775,15 @@ void DeleteShow()
     {
         Console.WriteLine("Angiv ID på det show der skal slettes: ");
         int showId = int.Parse(Console.ReadLine());
-        //Find show i repository
-        Show show = showRepository.GetById(showId);
-        Console.WriteLine("Er du sikker? Denne handling kan ikke fortrydes:\n" +
+        //Find show i service
+        Show show = showService.GetById(showId);
+        Console.WriteLine($"Er du sikker på at du vil slette {show.ShowName}? Denne handling kan ikke fortrydes:\n" +
             "1 - Ja, slet valgt show.\n" +
             "2 - Nej, fortryd og gå tilbage til menu. ");
         int deleteShowChoice = int.Parse(Console.ReadLine());
         if (deleteShowChoice == 1)
         {
-            showRepository.Delete(showId);
+            showService.DeleteShow(showId);
             Console.WriteLine("Show slettet.");
         } 
         else if (deleteShowChoice == 2)
