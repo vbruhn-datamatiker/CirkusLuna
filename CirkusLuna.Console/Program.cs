@@ -59,7 +59,7 @@ while (true)
         if (createReservation == "1")
         {
             Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
-            int showId = int.Parse(Console.ReadLine());
+            int showId = ReadInt();
             Show chosenShow = controller.GetShowById(showId);
 
             //Tjekker at indtastet showId er valid
@@ -225,7 +225,7 @@ while (true)
                     if (employeeEditReservation == "1")
                     {
                         Console.WriteLine("Angiv ID på det show du vil oprette en reservation til: ");
-                        int employeeCreateReservation = int.Parse(Console.ReadLine());
+                        int employeeCreateReservation = ReadInt();
                         Show chosenShow = controller.GetShowById(employeeCreateReservation);
                         CreateReservation(chosenShow);
                     }
@@ -415,7 +415,7 @@ void DisplayEmployees()
 
     //Vælg antal biletter
     Console.WriteLine("Hvor mange billetter ønsker du?:  ");
-    int ticketAmount = int.Parse(Console.ReadLine());
+    int ticketAmount = ReadInt();
 
     //Controller koordinerer oprettelse af kunde og reservation
     bool createCustomerSuccess = controller.CreateReservation(chosenShow, firstName, lastName, email, phoneNumber, ticketType, ticketAmount);
@@ -489,9 +489,9 @@ void CreateShow()
         string showDateInput = Console.ReadLine();
         DateOnly newDate = DateOnly.Parse(showDateInput);
         Console.WriteLine("Angiv hvor mange standard pladser showet skal have: ");
-        int showStandardTickets = int.Parse(Console.ReadLine());
+        int showStandardTickets = ReadInt();
         Console.WriteLine("Angiv hvor mange VIP pladser showet skal have: ");
-        int showVipTickets = int.Parse(Console.ReadLine());
+        int showVipTickets = ReadInt();
         Console.WriteLine($"Angiv by hvor showet skal finde sted: ");
         string cityName = Console.ReadLine();
 
@@ -508,7 +508,7 @@ void UpdateCustomer()
 {
     //Finder eksisterende kunde på ID
     Console.WriteLine("Skriv ID på kunde der skal ændres: ");
-    int existingCustomerId = int.Parse(Console.ReadLine());
+    int existingCustomerId = ReadInt();
 
     //Holder update() kørende
     bool updateCustomer = true;
@@ -523,7 +523,7 @@ void UpdateCustomer()
 
         Console.WriteLine("0 - Afslut ændringer");
 
-        int updateCustomerChoice = int.Parse(Console.ReadLine());
+        int updateCustomerChoice = ReadInt();
 
         if (updateCustomerChoice == 1)
         {
@@ -558,7 +558,7 @@ void UpdateArtist()
 {
     //Finder eksisterende Artist på ID
     Console.WriteLine("Skriv ID på artist der skal ændres: ");
-    int existingArtistId = int.Parse(Console.ReadLine());
+    int existingArtistId = ReadInt();
 
     //Holder update() kørende
     bool updateArtist = true;
@@ -572,7 +572,7 @@ void UpdateArtist()
         
         Console.WriteLine("0 - Afslut ændringer");
 
-        int updateArtistChoice = int.Parse(Console.ReadLine());
+        int updateArtistChoice = ReadInt();
 
         if (updateArtistChoice == 1)
         {
@@ -608,7 +608,7 @@ void UpdateReservation()
 {
     //Finder eksisterende Artist på ID
     Console.WriteLine("Skriv ID på den reservation der skal ændres: ");
-    int existingReservationId = int.Parse(Console.ReadLine());
+    int existingReservationId = ReadInt();
 
     //Holder update() kørende
     bool updateReservation = true;
@@ -623,7 +623,7 @@ void UpdateReservation()
 
         Console.WriteLine("0 - Afslut ændringer");
 
-        int updateReservationChoice = int.Parse(Console.ReadLine());
+        int updateReservationChoice = ReadInt();
 
         if (updateReservationChoice == 1)
         {
@@ -637,7 +637,7 @@ void UpdateReservation()
         else if (updateReservationChoice == 2)
         {
              Console.WriteLine("Indtast ønsket antal billetter: ");
-             int newTicketAmount = int.Parse(Console.ReadLine());
+             int newTicketAmount = ReadInt();
              bool success = controller.UpdateReservationTickets(existingReservationId, newTicketAmount);
                 if (success)
                     Console.WriteLine($"Billetter opdateret til {newTicketAmount}.");
@@ -656,7 +656,7 @@ void UpdateReservation()
 void UpdateShow()
     {
         Console.WriteLine("Angiv ID på det show der skal ændres: ");
-        int existingShowId = int.Parse(Console.ReadLine());
+        int existingShowId = ReadInt();
 
         //Holder update() kørende
         bool updateShow = true;
@@ -693,14 +693,14 @@ void UpdateShow()
             else if (updateShowChoice == "3")
             {
                 Console.WriteLine("Angiv hvor mange ledige standard pladser der skal være: ");
-                int updatedStandardSeat = int.Parse(Console.ReadLine());
+                int updatedStandardSeat = ReadInt();
                 controller.UpdateShowSeats(existingShowId, updatedStandardSeat);
                 Console.WriteLine($"Du har oprettet {updatedStandardSeat} standard pladser. ");
             }
             else if (updateShowChoice == "4")
             {
                 Console.WriteLine("Angiv hvor mange ledige VIP pladser der skal være: ");
-                int UpdatedVipSeat = int.Parse(Console.ReadLine());
+                int UpdatedVipSeat = ReadInt();
                 controller.UpdateShowVipSeats(existingShowId, UpdatedVipSeat);
                 Console.WriteLine($"Du har oprettet {UpdatedVipSeat} VIP pladser. ");
             }
@@ -730,7 +730,7 @@ void UpdateShow()
 void DeleteReservation()
     {
         Console.WriteLine("Angiv ID på den reservation du ønsker at slette: ");
-        int reservationId = int.Parse(Console.ReadLine());
+        int reservationId = ReadInt();
         controller.DeleteReservation(reservationId);
         Console.WriteLine("Reservationen er slettet.");
     }
@@ -738,7 +738,7 @@ void DeleteReservation()
 void DeleteNewsPost()
     {
         Console.WriteLine("Angiv ID på den news post der skal slettes: ");
-        int newsPostId = int.Parse(Console.ReadLine()); 
+        int newsPostId = ReadInt(); 
         NewsPost newsPost = newsPostService.GetById(newsPostId);
         controller.DeleteNewsPost(newsPostId);
         Console.WriteLine("Post slettet.");
@@ -747,7 +747,7 @@ void DeleteNewsPost()
 void DeleteArtist()
     {
         Console.WriteLine("Angiv ID på den artist der skal slettes: ");
-        int artistId = int.Parse(Console.ReadLine());
+        int artistId = ReadInt();
         Artist artist = artistService.GetById(artistId);
         controller.DeleteArtist(artistId);
         Console.WriteLine($"Artist {artist.FullName} er fyret.");
@@ -758,14 +758,14 @@ void DeleteShow()
         Console.WriteLine("Angiv ID på det show der skal slettes: ");
         //Exception - hvis brugeren indtaster et bogstav istedet for et tal
 
-        int showId = int.Parse(Console.ReadLine());
+        int showId = ReadInt();
 
         //Find show i service
         Show show = controller.GetShowById(showId);
         Console.WriteLine($"Er du sikker på at du vil slette {show.ShowName}? Denne handling kan ikke fortrydes:\n" +
             "1 - Ja, slet valgt show.\n" +
             "2 - Nej, fortryd og gå tilbage til menu. ");
-        int deleteShowChoice = int.Parse(Console.ReadLine());
+        int deleteShowChoice = ReadInt();
         if (deleteShowChoice == 1)
         {
             controller.DeleteShow(showId);
@@ -774,6 +774,25 @@ void DeleteShow()
         else if (deleteShowChoice == 2)
         {
             Console.WriteLine("Valg fortrudt. Går tilbage til menu.");
+        }
+    }
+
+    //Hjælpefunktion der håndterer int input fra brugeren
+    //Try/catch bruges til at fange fejl hvis brugeren indtaster noget der ikke er et tal
+    int ReadInt()
+    {
+        while (true)
+        {
+            try
+            {
+                //Forsøger at konvertere input til int
+                return ReadInt();
+            }
+            catch (FormatException)
+            {
+                //Fanges hvis input ikke kan konverteres til int - f.eks. hvis brugeren skriver "a,b,c"
+                Console.WriteLine("Ugyldigt input - indtast venligst et tal.");
+            }
         }
     }
 
