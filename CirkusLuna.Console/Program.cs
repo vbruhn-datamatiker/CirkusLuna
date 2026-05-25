@@ -24,6 +24,13 @@ ConsoleController controller = new ConsoleController(
     showService, reservationService, customerService,
     artistService, newsPostService, employeeService);
 
+//Dictionary der mapper billettype til pris
+Dictionary<TicketType, double> ticketPrices = new Dictionary<TicketType, double>
+{
+    { TicketType.Standard, 149.95},
+    { TicketType.VIP, 299.95}
+};
+
 while (true)
 {
     //Indledning
@@ -422,10 +429,15 @@ void DisplayEmployees()
 
     if (createCustomerSuccess)
     {
+        //Slår prisen op i dictionary baseret på billettype
+        double pricePerTicket = ticketPrices[ticketType];
+        double totalPrice = pricePerTicket * ticketAmount;
+
         Console.WriteLine($"\nTak {newCustomer.FirstName}! Din reservation er oprettet. Her er din kvittering: ");
         Console.WriteLine($"Show: {chosenShow.ShowName} i {chosenShow.City.Name} d. {chosenShow.Date}");
         Console.WriteLine($"Billettype: {ticketType}, antal {ticketAmount}.");
-    }
+        Console.WriteLine($"Pris pr. billet: {pricePerTicket} kr. — Total: {totalPrice} kr.");
+        }
     else
     {
         Console.WriteLine("Reservationen kunne ikke oprettes - ingen ledige pladser eller showet er allerede afholdt.");
