@@ -7,11 +7,14 @@ IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowJSONRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 ICustomerRepository customerRepository = new CustomerJSONRepository();
-ICustomerService customerService = new CustomerService(customerRepository);
-IShowService showService = new ShowService(showRepository);
 IReservationRepository reservationRepository = new ReservationJSONRepository();
-IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
 INewsPostRepository newsPostRepository = new NewsPostJSONRepository();
+//Service
+IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
+ICustomerService customerService = new CustomerService(customerRepository);
+IArtistService artistService = new ArtistService(artistRepository);
+IShowService showService = new ShowService(showRepository);
+
 
 //Console App Program
 while (true)
@@ -349,7 +352,7 @@ void DisplayCustomers()
 
 void DisplayArtists()
 {
-    foreach (Artist artist in artistRepository.GetAll())
+    foreach (Artist artist in artistService.GetAll())
     {
         Console.WriteLine($"[{artist.Id}] {artist.Act}, {artist.FullName}");
     }
@@ -461,11 +464,8 @@ void CreateArtist()
         Console.WriteLine("Indtast Act på ny artist: ");
         string act = Console.ReadLine();
 
-        int artistId = artistRepository.GetAll().Count + 1;
-       //Opret og tilføj ny artist til artistRepo
-        Artist newArtist = new Artist(artistId, firstName, lastName, email, act);
-        artistRepository.Add(newArtist);
-        Console.WriteLine($"Artist nr: [{artistId}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
+        Artist newArtist = artistService.AddArtist(firstName, lastName, email, act);
+        Console.WriteLine($"Artist nr: [{newArtist.Id}] - {newArtist.FirstName} {newArtist.LastName}, {newArtist.Act} er nu oprettet i systemet! ");
     }
 
 void CreateEmployee()
@@ -594,7 +594,6 @@ void UpdateArtist()
     //Finder eksisterende Artist på ID
     Console.WriteLine("Skriv ID på artist der skal ændres: ");
     int existingArtistId = int.Parse(Console.ReadLine());
-    Artist artist = artistRepository.GetById(existingArtistId);
 
     //Holder update() kørende
     bool updateArtist = true;
@@ -613,24 +612,24 @@ void UpdateArtist()
         if (updateArtistChoice == 1)
         {
             Console.WriteLine("Indtast nyt fornavn:");
-            artist.FirstName = Console.ReadLine();
+            string firstName = Console.ReadLine();
             Console.WriteLine("Indtast nyt efternavn:");
-            artist.LastName = Console.ReadLine();
+            string lastName = Console.ReadLine();
             //Opdater ændringer
-            artistRepository.Update(artist);
+            artistService.UpdateName(existingArtistId, firstName, lastName);
 
         }
         else if (updateArtistChoice == 2)
         {
             Console.WriteLine("Indtast ny email:");
-            artist.Email = Console.ReadLine();
-            artistRepository.Update(artist);
+            string email = Console.ReadLine();
+            artistService.UpdateEmail(existingArtistId, email);
         }
         else if (updateArtistChoice == 3)
         {
             Console.WriteLine("Indtast ny Act:");
-            artist.Act = Console.ReadLine();
-            artistRepository.Update(artist);
+            string act = Console.ReadLine();
+            artistService.UpdateAct(existingArtistId, act);
         }
         else if (updateArtistChoice == 0)
         {
@@ -830,11 +829,9 @@ void DeleteArtist()
     {
         Console.WriteLine("Angiv ID på den artist der skal slettes: ");
         int artistId = int.Parse(Console.ReadLine());
-        //Find artist i repository
-        Artist artist = artistRepository.GetById(artistId);
-        //slet
-        artistRepository.Delete(artistId);
-        Console.WriteLine($"Artist {artist.FirstName} er fyret.");
+        Artist artist = artistService.GetById(artistId);
+        artistService.DeleteArtist(artistId);
+        Console.WriteLine($"Artist {artist.FullName} er fyret.");
     }
 
 void DeleteShow()
