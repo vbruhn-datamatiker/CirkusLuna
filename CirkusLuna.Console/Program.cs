@@ -7,6 +7,7 @@ IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowJSONRepository();
 IEmployeeRepository employeeRepository = new EmployeeRepository();
 ICustomerRepository customerRepository = new CustomerJSONRepository();
+ICustomerService customerService = new CustomerService(customerRepository);
 IShowService showService = new ShowService(showRepository);
 IReservationRepository reservationRepository = new ReservationJSONRepository();
 IReservationService reservationService = new ReservationService(reservationRepository, showRepository);
@@ -340,7 +341,7 @@ void DisplayReservation()
 
 void DisplayCustomers()
 {
-    foreach (Customer customer in customerRepository.GetAll())
+    foreach (Customer customer in customerService.GetAll())
     {
         Console.WriteLine($"Kunde nr: [{customer.Id}] - {customer.FullName} - {customer.Email} - {customer.PhoneNumber}");
     }
@@ -387,9 +388,8 @@ void CreateReservation(Show chosenShow)
     Console.WriteLine("Indtast telefonnummer: ");
     string phoneNumber = Console.ReadLine();
 
-    //Generer nyt CustomerID
-    int customerId = customerRepository.GetAll().Count + 1;
-    Customer newCustomer = new Customer(customerId, firstName, lastName, email, phoneNumber, false);
+    //Kalder AddCustomer() fra servicelag
+    Customer newCustomer = customerService.AddCustomer(firstName, lastName, email, phoneNumber);
 
     customerRepository.Add(newCustomer);
 
@@ -543,7 +543,7 @@ void UpdateCustomer()
     //Finder eksisterende kunde på ID
     Console.WriteLine("Skriv ID på kunde der skal ændres: ");
     int existingCustomerId = int.Parse(Console.ReadLine());
-    Customer customer = customerRepository.GetById(existingCustomerId);
+    //Customer customer = customerRepository.GetById(existingCustomerId); - Fjernet kald direkte til repository, da det skal gå igennem service.
 
     //Holder update() kørende
     bool updateCustomer = true;
@@ -563,24 +563,23 @@ void UpdateCustomer()
         if (updateCustomerChoice == 1)
         {
             Console.WriteLine("Indtast nyt fornavn:");
-            customer.FirstName = Console.ReadLine();
+            string firstName = Console.ReadLine();
             Console.WriteLine("Indtast nyt efternavn:");
-            customer.LastName = Console.ReadLine();
+            string lastName = Console.ReadLine();
             //Opdater ændringer
-            customerRepository.Update(customer);
-
+            customerService.UpdateName(existingCustomerId, firstName, lastName);
         }
         else if (updateCustomerChoice == 2)
         {
             Console.WriteLine("Indtast ny email:");
-            customer.Email = Console.ReadLine();
-            customerRepository.Update(customer);
+            string email = Console.ReadLine();
+            customerService.UpdateEmail(existingCustomerId, email);
         }
         else if (updateCustomerChoice == 3)
         {
             Console.WriteLine("Indtast nyt telefon nr.:");
-            customer.PhoneNumber = Console.ReadLine();
-            customerRepository.Update(customer);
+            string PhoneNumber = Console.ReadLine();
+            customerService.UpdatePhoneNumber(existingCustomerId, PhoneNumber);
         }
         else if (updateCustomerChoice == 0)
         {
@@ -669,7 +668,10 @@ void UpdateReservation()
             reservation.Customer.Email = Console.ReadLine();
             Console.WriteLine("Indtast nyt tlf nummer: ");
             reservation.Customer.PhoneNumber = Console.ReadLine();
-            customerRepository.Update(reservation.Customer);
+            //Opdater ændringer gennem kald til service lag.
+            customerService.UpdateEmail(reservation.Customer.Id, reservation.Customer.Email);
+            customerService.UpdatePhoneNumber(reservation.Customer.Id, reservation.Customer.PhoneNumber);
+                
             reservationRepository.Update(reservation);
         }
         else if (updateReservationChoice == 2)
