@@ -33,9 +33,10 @@ while (true)
 
     Console.WriteLine("------------------ Menu ------------------");
 
-    Console.WriteLine("Se alle fremtidige forestillinger - Tast 1");
-    Console.WriteLine("Søg efter den næste forestilling i en by - Tast 2");
-    Console.WriteLine("Se de seneste nyheder! - tast 3");
+    Console.WriteLine("Tast 1 - Se alle fremtidige forestillinger");
+    Console.WriteLine("Tast 2 - Søg efter den næste forestilling i en by");
+    Console.WriteLine("Tast 3 - Se oversigt over alle kommende shows i diverse byer, sorteret alfabetisk!");
+    Console.WriteLine("Tast 4 - Se de seneste nyheder!");
 
     Console.WriteLine("\nLog ind som medarbejder - Tast 5\n");
 
@@ -103,6 +104,11 @@ while (true)
         }
     }
     else if (choice == "3")
+    {
+        DisplaySortedCities();
+    }
+
+    else if (choice == "4")
     {
         DisplayNews();
     }
@@ -362,10 +368,19 @@ void DisplayEmployees()
         }
     }
 
-// -------------------- Create() funktioner ----------------------------
+    void DisplaySortedCities()
+    {
+        Console.WriteLine("\n--- Byer med forestillinger (A-Å) ---");
+        foreach (City city in controller.GetSortedCities())
+        {
+            Console.WriteLine($"[{city.Id}]- {city.Name}");
+        }
+    }
 
-//Funktion til at oprette reservation ud fra chosenShow
-void CreateReservation(Show chosenShow)
+    // -------------------- Create() funktioner ----------------------------
+
+    //Funktion til at oprette reservation ud fra chosenShow
+    void CreateReservation(Show chosenShow)
 {
     Console.WriteLine("Indtast navn: ");
     string firstName = Console.ReadLine();
@@ -741,7 +756,10 @@ void DeleteArtist()
 void DeleteShow()
     {
         Console.WriteLine("Angiv ID på det show der skal slettes: ");
+        //Exception - hvis brugeren indtaster et bogstav istedet for et tal
+
         int showId = int.Parse(Console.ReadLine());
+
         //Find show i service
         Show show = controller.GetShowById(showId);
         Console.WriteLine($"Er du sikker på at du vil slette {show.ShowName}? Denne handling kan ikke fortrydes:\n" +
@@ -758,6 +776,5 @@ void DeleteShow()
             Console.WriteLine("Valg fortrudt. Går tilbage til menu.");
         }
     }
-
 
 } //Ende af While (true)

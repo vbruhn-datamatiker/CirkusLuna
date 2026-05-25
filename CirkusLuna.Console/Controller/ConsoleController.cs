@@ -70,6 +70,12 @@ namespace CirkusLuna.Console.Controller
             return _showService.GetByCity(cityName);
         }
 
+        //Returnerer alle byer sorteret alfabetisk via bubble sort
+        public List<City> GetSortedCities()
+        {
+            return _showService.GetSortedCities();
+        }
+
         //Opretter nyt show og returnerer det oprettede objekt
         public Show CreateShow(string showName, DateOnly date, int seats, int vipSeats, string cityName)
         {
