@@ -13,5 +13,7 @@ namespace CirkusLuna.ClassLibrary.Service
         List<Reservation> GetByShow(int id);
         bool CreateReservation(Reservation reservation);
 
+
+
     }
 }
