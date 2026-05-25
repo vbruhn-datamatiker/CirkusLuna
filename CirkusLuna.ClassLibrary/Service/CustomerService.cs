@@ -5,6 +5,7 @@ namespace CirkusLuna.ClassLibrary.Service
 {
     public class CustomerService : ICustomerService
     {
+        //Gemmer reference til ICustomerRepository
         private ICustomerRepository _customerRepository;
 
         public CustomerService(ICustomerRepository customerRepository)

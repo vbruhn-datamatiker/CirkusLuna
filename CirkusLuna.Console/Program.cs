@@ -391,7 +391,7 @@ void CreateReservation(Show chosenShow)
     //Kalder AddCustomer() fra servicelag
     Customer newCustomer = customerService.AddCustomer(firstName, lastName, email, phoneNumber);
 
-    customerRepository.Add(newCustomer);
+    //customerRepository.Add(newCustomer);
 
     //Vælg billettype
     Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
