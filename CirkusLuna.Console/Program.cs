@@ -53,7 +53,7 @@ while (true)
         {
             Console.WriteLine("Indtast SHOW NUMMER på det show du ønsker at bestille billetter til!");
             int showId = int.Parse(Console.ReadLine());
-            Show chosenShow = showRepository.GetById(showId);
+            Show chosenShow = showService.GetById(showId);
 
             //Tjekker at indtastet showId er valid
             if (chosenShow == null)
@@ -77,7 +77,7 @@ while (true)
         //Søg efter show i en bestemt by
         Console.WriteLine("Indtast bynavn");
         string cityInput = Console.ReadLine();
-        List<Show> shows = showRepository.GetByCity(cityInput);
+        List<Show> shows = showService.GetByCity(cityInput);
 
         if (shows.Count == 0)
         {
@@ -228,7 +228,7 @@ while (true)
                     {
                         Console.WriteLine("Angiv ID på det show du vil oprette en reservation til: ");
                         int employeeCreateReservation = int.Parse(Console.ReadLine());
-                        Show chosenShow = showRepository.GetById(employeeCreateReservation);
+                        Show chosenShow = showService.GetById(employeeCreateReservation);
                         CreateReservation(chosenShow);
                     }
                     else if (employeeEditReservation == "2")
@@ -296,7 +296,7 @@ void DisplayShows()
     {
         int bookedStandardSeats = 0;
         int bookedVipSeats = 0;
-            foreach (Reservation r in reservationRepository.GetByShow(show.Id))
+            foreach (Reservation r in reservationService.GetByShow(show.Id))
             {
                 if (r.TicketType == TicketType.VIP)
                 {
@@ -390,8 +390,6 @@ void CreateReservation(Show chosenShow)
     //Kalder AddCustomer() fra servicelag
     Customer newCustomer = customerService.AddCustomer(firstName, lastName, email, phoneNumber);
 
-    //customerRepository.Add(newCustomer);
-
     //Vælg billettype
     Console.WriteLine("Vælg billettype - Standard (1) eller VIP (2)");
     string ticketChoice = Console.ReadLine();
@@ -422,7 +420,7 @@ void CreateReservation(Show chosenShow)
     }
 
     //Opret Reservation
-    int reservationId = reservationRepository.GetAll().Count + 1;
+    int reservationId = reservationService.GetAll().Count + 1;
     Reservation newReservation = new Reservation(
         reservationId,
         new DateTime(chosenShow.Date.Year, chosenShow.Date.Month, chosenShow.Date.Day),
@@ -526,7 +524,6 @@ void UpdateCustomer()
     //Finder eksisterende kunde på ID
     Console.WriteLine("Skriv ID på kunde der skal ændres: ");
     int existingCustomerId = int.Parse(Console.ReadLine());
-    //Customer customer = customerRepository.GetById(existingCustomerId); - Fjernet kald direkte til repository, da det skal gå igennem service.
 
     //Holder update() kørende
     bool updateCustomer = true;
