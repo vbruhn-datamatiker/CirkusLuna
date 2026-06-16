@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cirkus Luna - Burndown Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #e0e0ff;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #aaaacc;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            background-color: #16213e;
+            border-radius: 12px;
+            padding: 30px;
+            width: 900px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .legend {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #aaaacc;
+        }
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cirkus Luna — Burndown Chart</h1>
+    <p>Total: 57 story points | Periode: 09/05/2026 – 25/05/2026</p>
+
+    <div class="chart-container">
+        <canvas id="burndownChart"></canvas>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #4e9af1;"></div>
+                Ideel linje
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f1c94e;"></div>
+                Faktisk linje
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const labels = [
+            '09/05', '10/05', '11/05', '12/05', '13/05',
+            '14/05', '15/05', '16/05', '17/05', '18/05',
+            '19/05', '20/05', '21/05', '22/05', '23/05',
+            '24/05', '25/05'
+        ];
+
+        // Ideel linje - jævnt fald fra 57 til 0 over 17 dage
+        const idealData = [
+            57, 53.6, 50.3, 46.9, 43.6,
+            40.2, 36.9, 33.5, 30.2, 26.8,
+            23.5, 20.1, 16.8, 13.4, 10.1,
+            6.7, 0
+        ];
+
+        // Faktisk linje - baseret på commits
+        const actualData = [
+            57,   // 09/05 - projekt oprettet
+            57,   // 10/05 - ingen commits
+            57,   // 11/05 - ingen commits
+            57,   // 12/05 - ingen commits
+            55,   // 13/05 - Show + City klasser, ShowRepository (-2)
+            55,   // 14/05 - ingen commits
+            55,   // 15/05 - ingen commits
+            52,   // 16/05 - EmployeeRepository, VIP pladser (-3)
+            50,   // 17/05 - Medarbejder login (-2)
+            45,   // 18/05 - Booking, billettype (-5)
+            42,   // 19/05 - Sædetildeling, artister, bubble sort (-3)
+            28,   // 20/05 - Update funktioner, display, reservationer (-14)
+            19,   // 21/05 - CreateShow, CreateArtist, JSON, søg (-9)
+            12,   // 22/05 - JSON repos, employees, news (-7)
+            9,    // 23/05 - DeleteShow, DeleteArtist (-3)
+            9,    // 24/05 - ingen commits
+            0     // 25/05 - Services, Controller, features (-9)
+        ];
+
+        const ctx = document.getElementById('burndownChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Ideel linje',
+                        data: idealData,
+                        borderColor: '#4e9af1',
+                        backgroundColor: 'rgba(78, 154, 241, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [8, 4],
+                        pointRadius: 3,
+                        pointBackgroundColor: '#4e9af1',
+                        tension: 0.1,
+                        fill: false
+                    },
+                    {
+                        label: 'Faktisk linje',
+                        data: actualData,
+                        borderColor: '#f1c94e',
+                        backgroundColor: 'rgba(241, 201, 78, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#f1c94e',
+                        pointHoverRadius: 7,
+                        tension: 0.1,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f3460',
+                        titleColor: '#ffffff',
+                        bodyColor: '#aaaacc',
+                        borderColor: '#4e9af1',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' point tilbage';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255,255,255,0.05)'
+                        },
+                        ticks: {
+                            color: '#aaaacc'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Dato',
+                            color: '#aaaacc'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255,255,255,0.05)'
+                        },
+                        ticks: {
+                            color: '#aaaacc'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Story points tilbage',
+                            color: '#aaaacc'
+                        },
+                        min: 0,
+                        max: 60
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

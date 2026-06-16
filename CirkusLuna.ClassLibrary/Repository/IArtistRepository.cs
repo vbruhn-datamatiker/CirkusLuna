@@ -13,5 +13,8 @@ namespace CirkusLuna.ClassLibrary.Repository
         void Add(Artist artist);
         void Update(Artist artist);
         void Delete(int id);
+
+        Artist GetByAct(string act);
+
     }
 }

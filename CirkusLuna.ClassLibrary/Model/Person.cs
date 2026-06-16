@@ -28,5 +28,10 @@
             Email = email;
         }
 
+        public virtual string ToString()
+        {
+            return "Eksempel";
+        }
+
     }
 }

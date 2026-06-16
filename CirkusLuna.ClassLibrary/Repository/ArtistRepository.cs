@@ -60,6 +60,19 @@ namespace CirkusLuna.ClassLibrary.Repository
             _artistList.Remove(GetById(id));
         }
 
+        public Artist GetByAct(string act)
+        {
+            foreach (Artist artist in _artistList)
+            {
+                if (artist.Act == act)
+                {
+                    return artist;
+                }
+            }
+            return null;
+        }
+
+
     }
 
 }

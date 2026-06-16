@@ -49,6 +49,11 @@ namespace CirkusLuna.Console.Controller
         {
             return _employeeService.GetAll();
         }
+        
+        public Employee GetByLastName(string lastName)
+        {
+            return _employeeService.GetByLastName(lastName);
+        }
 
         // -------------------- Show --------------------
 

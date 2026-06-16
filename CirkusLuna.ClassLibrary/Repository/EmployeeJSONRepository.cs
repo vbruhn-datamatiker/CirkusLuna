@@ -86,5 +86,20 @@ namespace CirkusLuna.ClassLibrary.Repository
             SaveToFile();
         }
 
+        public Employee GetByLastName(string lastName)
+        { 
+            for (int i = 0; i < _employeeList.Count;i++)
+            {
+                if (_employeeList[i].LastName == lastName)
+                {
+                    return _employeeList[i];
+                }
+            }
+            return null;
+
+        }
+
+
+
     }
 }

@@ -14,6 +14,12 @@
         {
             Act = act;
         }
+
+        public override string ToString()
+        {
+            return $"{FirstName} er Cirkus Lunas {Act}";
+        }
+
     }
 
 }

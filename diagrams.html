@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cirkus Luna - Diagrammer</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #e0e0ff;
+            margin-bottom: 5px;
+        }
+        h2 {
+            color: #a0a0ee;
+            margin-top: 50px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #aaaacc;
+            margin-bottom: 40px;
+        }
+        .diagram-container {
+            background-color: #16213e;
+            border-radius: 12px;
+            padding: 30px;
+            width: 950px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+        .diagram-container .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cirkus Luna — Diagrammer</h1>
+    <p class="subtitle">Klassediagram · Arkitekturdiagram · Sekvensdiagram</p>
+
+    <!-- ════════════════════════════════════════════════
+         1. KLASSEDIAGRAM
+    ════════════════════════════════════════════════ -->
+    <h2>1. Klassediagram — Modeller</h2>
+    <div class="diagram-container">
+        <div class="mermaid">
+classDiagram
+    class Person {
+        +int Id
+        +string FirstName
+        +string LastName
+        +string Email
+    }
+
+    class Customer {
+        +string PhoneNumber
+        +bool IsVip
+    }
+
+    class Employee {
+        +string Role
+        +string Password
+    }
+
+    class Artist {
+        +string Act
+    }
+
+    class Show {
+        +int Id
+        +string ShowName
+        +DateOnly Date
+        +int Seats
+        +int VipSeats
+        +int TotalSeats
+        +string City
+        +List~Artist~ Artists
+    }
+
+    class Reservation {
+        +int ReservationId
+        +DateTime ReservationTime
+        +TicketType TicketType
+        +int TotalSeats
+        +int SeatNumber
+        +Customer Customer
+        +Show Show
+    }
+
+    class NewsPost {
+        +int NewsPostId
+        +string Title
+        +string Content
+        +DateTime PublishedDateTime
+    }
+
+    class TicketType {
+        <<enumeration>>
+        Standard
+        VIP
+    }
+
+    Person <|-- Customer
+    Person <|-- Employee
+    Person <|-- Artist
+
+    Show "1" o-- "0..*" Artist : har artister
+    Reservation "1" --> "1" Customer : tilhører
+    Reservation "1" --> "1" Show : gælder for
+    Reservation --> TicketType : bruger
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         2. ARKITEKTURDIAGRAM (3-LAG)
+    ════════════════════════════════════════════════ -->
+    <h2>2. Arkitekturdiagram — 3-lags struktur</h2>
+    <div class="diagram-container">
+        <div class="mermaid">
+flowchart TD
+    subgraph UI["🖥️  Præsentationslag — CirkusLuna.Console"]
+        ProgramCS["Program.cs\n(Menuer + brugerinput)"]
+    end
+
+    subgraph BL["⚙️  Forretningslag — CirkusLuna.ClassLibrary / Service + Controller"]
+        Controller["ConsoleController"]
+        CS["CustomerService"]
+        AS["ArtistService"]
+        SS["ShowService"]
+        RS["ReservationService"]
+        NPS["NewsPostService"]
+        ES["EmployeeService"]
+    end
+
+    subgraph DL["🗄️  Datalag — CirkusLuna.ClassLibrary / Repository"]
+        CR["CustomerJSONRepository"]
+        AR["ArtistJSONRepository"]
+        SR["ShowJSONRepository"]
+        RR["ReservationJSONRepository"]
+        NR["NewsPostJSONRepository"]
+        ER["EmployeeJSONRepository"]
+    end
+
+    subgraph FILES["📁  JSON-filer (lokal lagring)"]
+        F1["customers.json"]
+        F2["artists.json"]
+        F3["shows.json"]
+        F4["reservations.json"]
+        F5["newsposts.json"]
+        F6["employees.json"]
+    end
+
+    ProgramCS --> Controller
+    Controller --> CS
+    Controller --> AS
+    Controller --> SS
+    Controller --> RS
+    Controller --> NPS
+    Controller --> ES
+
+    CS --> CR
+    AS --> AR
+    SS --> SR
+    RS --> RR
+    NPS --> NR
+    ES --> ER
+
+    CR --> F1
+    AR --> F2
+    SR --> F3
+    RR --> F4
+    NR --> F5
+    ER --> F6
+
+    style UI fill:#0f3460,stroke:#4e9af1,color:#fff
+    style BL fill:#16213e,stroke:#a04ef1,color:#fff
+    style DL fill:#1a1a2e,stroke:#4ef1a0,color:#fff
+    style FILES fill:#0d0d1a,stroke:#f1c94e,color:#fff
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         3. SEKVENSDIAGRAM — Opret reservation
+    ════════════════════════════════════════════════ -->
+    <h2>3. Sekvensdiagram — Opret Reservation</h2>
+    <div class="diagram-container">
+        <div class="mermaid">
+sequenceDiagram
+    actor Bruger
+    participant P as Program.cs
+    participant C as ConsoleController
+    participant CS as CustomerService
+    participant RS as ReservationService
+    participant CR as CustomerJSONRepository
+    participant RR as ReservationJSONRepository
+
+    Bruger->>P: Vælger "Opret reservation"
+    P->>P: Indsamler navn, email, tlf, show, billettype, antal
+    P->>C: CreateReservation(show, navn, email, tlf, type, antal)
+
+    C->>CS: AddCustomer(navn, email, tlf)
+    CS->>CR: GetAll() — beregn næste ID
+    CS->>CR: Add(newCustomer)
+    CR-->>CS: Gemt i customers.json
+    CS-->>C: newCustomer
+
+    C->>RS: GetByShow(show.Id) — beregn sædenummer
+    RS->>RR: GetByShow(show.Id)
+    RR-->>RS: Eksisterende reservationer
+    RS-->>C: Liste af reservationer
+
+    C->>C: Beregner nextSeatNumber
+
+    C->>RS: CreateReservation(newReservation)
+    RS->>RS: Tjek: er show i fremtiden?
+    RS->>RS: Tæl bookede pladser
+    RS->>RS: Tjek kapacitet (VIP / Standard)
+    RS->>RR: Add(newReservation)
+    RR-->>RS: Gemt i reservations.json
+    RS-->>C: true (succes)
+
+    C-->>P: newReservation
+    P-->>Bruger: Bekræftelse med sædenummer og pris
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         4. INTERFACEDIAGRAM
+    ════════════════════════════════════════════════ -->
+    <h2>4. Interface- og Afhængighedsdiagram</h2>
+    <div class="diagram-container">
+        <div class="mermaid">
+classDiagram
+    class ICustomerRepository {
+        <<interface>>
+        +GetAll() List~Customer~
+        +GetById(int) Customer
+        +Add(Customer)
+        +Update(Customer)
+        +Delete(int)
+    }
+    class IArtistRepository {
+        <<interface>>
+        +GetAll() List~Artist~
+        +GetById(int) Artist
+        +Add(Artist)
+        +Update(Artist)
+        +Delete(int)
+    }
+    class IShowRepository {
+        <<interface>>
+        +GetAll() List~Show~
+        +GetById(int) Show
+        +Add(Show)
+        +Update(Show)
+        +Delete(int)
+    }
+    class IReservationRepository {
+        <<interface>>
+        +GetAll() List~Reservation~
+        +GetById(int) Reservation
+        +GetByShow(int) List~Reservation~
+        +GetByCustomer(int) List~Reservation~
+        +Add(Reservation)
+        +Update(Reservation)
+        +Delete(int)
+    }
+    class INewsPostRepository {
+        <<interface>>
+        +GetAll() List~NewsPost~
+        +GetById(int) NewsPost
+        +Add(NewsPost)
+        +Update(NewsPost)
+        +Delete(int)
+    }
+    class IEmployeeRepository {
+        <<interface>>
+        +GetAll() List~Employee~
+        +GetById(int) Employee
+        +Add(Employee)
+        +Update(Employee)
+        +Delete(int)
+    }
+
+    ICustomerRepository <|.. CustomerJSONRepository : implementerer
+    IArtistRepository <|.. ArtistJSONRepository : implementerer
+    IShowRepository <|.. ShowJSONRepository : implementerer
+    IReservationRepository <|.. ReservationJSONRepository : implementerer
+    INewsPostRepository <|.. NewsPostJSONRepository : implementerer
+    IEmployeeRepository <|.. EmployeeJSONRepository : implementerer
+
+    CustomerService --> ICustomerRepository : bruger
+    ArtistService --> IArtistRepository : bruger
+    ShowService --> IShowRepository : bruger
+    ReservationService --> IReservationRepository : bruger
+    ReservationService --> IShowRepository : bruger
+    NewsPostService --> INewsPostRepository : bruger
+    EmployeeService --> IEmployeeRepository : bruger
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#0f3460',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#4e9af1',
+                lineColor: '#4e9af1',
+                secondaryColor: '#16213e',
+                tertiaryColor: '#1a1a2e',
+                background: '#1a1a2e',
+                mainBkg: '#16213e',
+                nodeBorder: '#4e9af1',
+                clusterBkg: '#0f3460',
+                titleColor: '#ffffff',
+                edgeLabelBackground: '#16213e',
+                attributeBackgroundColorEven: '#0f3460',
+                attributeBackgroundColorOdd: '#16213e'
+            },
+            flowchart: {
+                curve: 'basis',
+                padding: 20
+            }
+        });
+    </script>
+</body>
+</html>

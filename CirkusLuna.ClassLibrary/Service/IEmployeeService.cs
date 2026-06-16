@@ -9,5 +9,7 @@ namespace CirkusLuna.ClassLibrary.Service
         Employee Login(string password);
         Employee AddEmployee(string firstName, string lastName, string email, string role);
         void DeleteEmployee(int id);
+
+        Employee GetByLastName(string lastName);
     }
 }

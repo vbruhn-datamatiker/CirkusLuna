@@ -1,6 +1,8 @@
 using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
 
+//Razor pages skrevet af Martin
+
 var builder = WebApplication.CreateBuilder(args);
 // Register repositories for dependency injection
 builder.Services.AddSingleton<IEmployeeRepository, EmployeeJSONRepository>();

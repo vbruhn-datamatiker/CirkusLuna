@@ -13,5 +13,7 @@ namespace CirkusLuna.ClassLibrary.Repository
         void Add(Employee employee);
         void Update(Employee employee);
         void Delete(int id);
+
+        Employee GetByLastName(string lastName);
     }
 }

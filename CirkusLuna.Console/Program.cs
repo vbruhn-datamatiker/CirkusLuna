@@ -2,11 +2,13 @@
 using CirkusLuna.ClassLibrary.Repository;
 using CirkusLuna.ClassLibrary.Service;
 using CirkusLuna.Console.Controller;
+using System.Security.Cryptography.X509Certificates;
+// Program.cs skrevet af Victoria
 
 //Repositories
 IArtistRepository artistRepository = new ArtistJSONRepository();
 IShowRepository showRepository = new ShowJSONRepository();
-IEmployeeRepository employeeRepository = new EmployeeRepository();
+IEmployeeRepository employeeRepository = new EmployeeJSONRepository();
 ICustomerRepository customerRepository = new CustomerJSONRepository();
 IReservationRepository reservationRepository = new ReservationJSONRepository();
 INewsPostRepository newsPostRepository = new NewsPostJSONRepository();
@@ -31,8 +33,19 @@ Dictionary<TicketType, double> ticketPrices = new Dictionary<TicketType, double>
     { TicketType.VIP, 299.95}
 };
 
+Dictionary<int, string> artistOfTheYear = new Dictionary<int, string>
+{
+    {2000, "Lotte-Bomstærk" },
+    {2001, "Linedanser-Line"},
+    {2002, "Klovn" },
+    {2003, "Linedanser-Line"}
+};
+
 while (true)
 {
+    CircusAnimal circusAnimal = new CircusAnimal("Løve", "Leo");
+
+    
     //Indledning
     Console.BackgroundColor = ConsoleColor.Blue;
     Console.WriteLine("--------------------- Velkommen til Cirkus Luna ---------------------\n");
@@ -47,6 +60,77 @@ while (true)
 
     Console.WriteLine("\nLog ind som medarbejder - Tast 5\n");
 
+    Console.WriteLine($"Se vores nye {circusAnimal.Species}, {circusAnimal.Name} ");
+    Console.WriteLine(circusAnimal.Perform());
+
+    Artist newArtist = new Artist(6, "Lotte", "Bomstærk", "lotte@lotte", "Strong-Woman");
+    Console.WriteLine(newArtist.ToString());
+
+    Console.WriteLine(" Tast 7 - Find medarbejder på efternavn");
+    Console.WriteLine(" Tast 8- Find artist på act");
+    Console.WriteLine(" Tast 9 - Opret Cirkusdyr");
+
+    //Slå specifik artist op på år
+    Console.WriteLine(artistOfTheYear[2000]);
+
+    //List alle
+    foreach (KeyValuePair<int, string> artist in artistOfTheYear)
+    {
+        Console.WriteLine($"{artist.Value} blev kåret som årets artist i {artist.Key} ");
+    }
+
+    //Filtrerer efter en bestemt artist - vi vil gerne se alle de år Line blev kåret 
+    Dictionary<int, string> DisplayArtistOfTheYear(Dictionary<int, string> artists)
+    {
+        Dictionary<int, string> result = new Dictionary<int, string>();
+        foreach (KeyValuePair<int, string> artist in artists)
+        {
+            if (artist.Value == "Linedanser-Line")
+            {
+                result.Add(artist.Key, artist.Value);
+            }
+        }
+        return result;
+
+    }
+
+    Dictionary<int, string> result = DisplayArtistOfTheYear(artistOfTheYear);
+    foreach (KeyValuePair<int, string> artist in result)
+    {
+        Console.WriteLine($"Navn: {artist.Value} Blev Kåret i år: {artist.Key}");
+    }
+
+
+    string findEmployee = Console.ReadLine();
+    if (findEmployee == "7")
+    {
+        Employee employee = employeeRepository.GetByLastName("Hansen");
+        Console.WriteLine($"Fandt: {employee.LastName}");
+    } else if (findEmployee == "8")
+    {
+        Console.WriteLine("Angiv act: ");
+        string findArtist = Console.ReadLine();
+        Artist artist = artistRepository.GetByAct(findArtist);
+        Console.WriteLine($"Fandt {artist.FirstName}, {findArtist}");
+    } else if (findEmployee == "9")
+    {
+        try
+        {
+            Console.WriteLine("Af hvilken art er det nye Cirkusdyr?");
+            string circusAnimalSpecies = Console.ReadLine();
+            circusAnimal.Species = circusAnimalSpecies;
+            Console.WriteLine($"Hvad hedder {circusAnimalSpecies}?");
+            string name = Console.ReadLine();
+
+            CircusAnimal newCircusAnimal = new CircusAnimal(circusAnimalSpecies, name);
+            Console.WriteLine($"Velkommen til vores nye cirkusdyr {newCircusAnimal.Name}, af arten {circusAnimalSpecies}");
+        } catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Fejl: {ex.Message}");
+        }
+
+
+    }
     //Søg efter forestillinger
     string choice = Console.ReadLine();
 

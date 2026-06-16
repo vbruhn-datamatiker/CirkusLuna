@@ -51,5 +51,10 @@ namespace CirkusLuna.ClassLibrary.Service
         {
             _employeeRepository.Delete(id);
         }
+
+        public Employee GetByLastName(string lastName)
+        { 
+            return _employeeRepository.GetByLastName(lastName);
+        }
     }
 }
